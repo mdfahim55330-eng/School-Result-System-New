@@ -33,14 +33,18 @@ app.use(
     })
 );
 
+app.set("trust proxy", 1);
+
 app.use(
     session({
-        secret: "school-result-secret-key",
+        secret: process.env.SESSION_SECRET || "school-result-secret-key",
         resave: false,
         saveUninitialized: false,
 
         cookie: {
-            secure: false,
+            secure: process.env.NODE_ENV === "production",
+            httpOnly: true,
+            sameSite: "lax",
             maxAge: 1000 * 60 * 60 * 8
         }
     })
