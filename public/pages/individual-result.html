@@ -1,0 +1,1854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Individual Result Entry</title>
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1f5f9;
+
+        }
+
+
+        .header {
+
+            background: #1e3a8a;
+
+            color: white;
+
+            padding: 18px 30px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+
+        .header h2 {
+
+            margin: 0;
+
+        }
+
+
+        .back-button {
+
+            background: white;
+
+            color: #1e3a8a;
+
+            border: none;
+
+            padding: 9px 16px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: 30px auto;
+
+            padding: 20px;
+
+        }
+
+
+        .box {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+
+        }
+
+
+        .box h2 {
+
+            margin-top: 0;
+
+            color: #1e293b;
+
+        }
+
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(220px, 1fr));
+
+            gap: 18px;
+
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        label {
+
+            margin-bottom: 7px;
+
+            font-weight: bold;
+
+            color: #334155;
+
+        }
+
+
+        input,
+        select {
+
+            width: 100%;
+
+            padding: 12px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+        }
+
+
+        input:focus,
+        select:focus {
+
+            outline: none;
+
+            border-color: #2563eb;
+
+        }
+
+
+        .student-section {
+
+            margin-top: 20px;
+
+            padding-top: 20px;
+
+            border-top:
+                1px solid #e2e8f0;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 20px;
+
+        }
+
+
+        th {
+
+            background: #1e3a8a;
+
+            color: white;
+
+            padding: 12px;
+
+            text-align: left;
+
+        }
+
+
+        td {
+
+            padding: 10px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+        }
+
+
+        .marks-input {
+
+            width: 120px;
+
+        }
+
+
+        .grade-preview {
+
+            font-weight: bold;
+
+        }
+
+
+        .submit-area {
+
+            display: flex;
+
+            gap: 15px;
+
+            margin-top: 25px;
+
+        }
+
+
+        .save-button {
+
+            background: #16a34a;
+
+            color: white;
+
+            border: none;
+
+            padding: 13px 25px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+        }
+
+
+        .clear-button {
+
+            background: #64748b;
+
+            color: white;
+
+            border: none;
+
+            padding: 13px 25px;
+
+            border-radius: 7px;
+
+            cursor: pointer;
+
+            font-size: 16px;
+
+        }
+
+
+        .message {
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            display: none;
+
+        }
+
+
+        .success {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+        }
+
+
+        .error {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .container {
+
+                padding: 10px;
+
+            }
+
+
+            table {
+
+                font-size: 13px;
+
+            }
+
+
+            .marks-input {
+
+                width: 80px;
+
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="header">
+
+        <h2>
+            Individual Result Entry
+        </h2>
+
+
+        <button class="back-button" onclick="goBack()">
+            Back to Dashboard
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================
+         MAIN
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- =========================
+             EXAM INFORMATION
+        ========================= -->
+
+        <div class="box">
+
+            <h2>
+                Exam Information
+            </h2>
+
+
+            <div class="form-grid">
+
+
+                <div class="form-group">
+
+                    <label>
+                        Exam Name
+                    </label>
+
+                    <select id="examSelect" required>
+
+                        <option value="">
+                            Select Exam
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Student Name
+                    </label>
+
+                    <input type="text" id="studentName" placeholder="Enter student name" required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Roll
+                    </label>
+
+                    <input type="text" id="roll" placeholder="Enter roll" required>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Registration
+                    </label>
+
+                    <input type="text" id="registration" placeholder="Optional">
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Group
+                    </label>
+
+                    <select id="groupName">
+
+                        <option value="">
+                            Select Group
+                        </option>
+
+                        <option value="Science">
+                            Science
+                        </option>
+
+                        <option value="Humanities">
+                            Humanities
+                        </option>
+
+                        <option value="Business Studies">
+                            Business Studies
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             SUBJECT MARKS
+        ========================= -->
+
+        <div class="box">
+
+            <h2>
+                Subject Marks
+            </h2>
+
+
+            <p>
+                Enter marks obtained by the student.
+            </p>
+
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Subject
+                        </th>
+
+                        <th>
+                            Code
+                        </th>
+
+                        <th>
+                            Full Marks
+                        </th>
+
+                        <th>
+                            Marks
+                        </th>
+
+                        <th>
+                            Grade
+                        </th>
+
+                        <th>
+                            Grade Point
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="subjectList">
+
+                    <tr>
+
+                        <td colspan="6" style="text-align:center">
+                            Select an exam first.
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+
+            <div class="submit-area">
+
+                <button class="save-button" onclick="saveResult()">
+                    Save Result
+                </button>
+
+
+                <button class="clear-button" onclick="clearForm()">
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div id="message" class="message"></div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+
+        let subjects = [];
+
+        let exams = [];
+
+        // ========================================
+            // EDIT MODE
+            // ========================================
+
+            const urlParams = new URLSearchParams(
+                window.location.search
+            );
+
+            const editId = urlParams.get("edit");
+
+            let isEditMode = !!editId;
+
+        // =========================
+        // Check Admin
+        // =========================
+
+        async function checkLogin() {
+
+            const response =
+                await fetch(
+                    "/api/admin/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.loggedIn) {
+
+                window.location.href =
+                    "/pages/admin-login.html";
+
+                return false;
+
+            }
+
+            return true;
+
+        }
+
+
+
+        // =========================
+        // Load Exams
+        // =========================
+
+        async function loadExams() {
+
+            const response =
+                await fetch(
+                    "/api/admin/exams"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+
+            exams = data.exams;
+
+
+            const select =
+                document.getElementById(
+                    "examSelect"
+                );
+
+
+            select.innerHTML = `
+                <option value="">
+                    Select Exam
+                </option>
+            `;
+
+
+            exams.forEach(exam => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value = exam.id;
+
+
+                option.textContent =
+                    `${exam.exam_name} - Class ${exam.class_name} - ${exam.exam_year}`;
+
+
+                select.appendChild(option);
+
+            });
+            
+            
+
+        }
+
+        // ========================================
+            // LOAD RESULT FOR EDIT
+            // ========================================
+
+            async function loadEditResult(id) {
+
+                try {
+
+                    const response = await fetch(
+                        `/api/admin/results/${id}`
+                    );
+
+                    const data = await response.json();
+
+                    if (!data.success) {
+
+                        alert(
+                            data.message ||
+                            "Could not load result."
+                        );
+
+                        return;
+                    }
+
+
+                    const student = data.student;
+
+                    const savedResults =
+                        data.results || [];
+
+
+                    // ========================================
+                    // Student Information
+                    // ========================================
+
+                    document.getElementById(
+                        "studentName"
+                    ).value = student.name || "";
+
+
+                    document.getElementById(
+                        "roll"
+                    ).value = student.roll || "";
+
+
+                    document.getElementById(
+                        "registration"
+                    ).value =
+                        student.registration || "";
+
+
+                    document.getElementById(
+                        "groupName"
+                    ).value =
+                        student.group_name || "";
+
+
+                    // ========================================
+                    // Find Original Exam
+                    // ========================================
+
+                    const exam = exams.find(item =>
+
+                        String(item.exam_name) ===
+                        String(student.exam_name)
+
+                        &&
+
+                        String(item.exam_year) ===
+                        String(student.exam_year)
+
+                        &&
+
+                        String(item.class_name) ===
+                        String(student.class_name)
+
+                    );
+
+
+                    if (!exam) {
+
+                        alert(
+                            "Original exam not found."
+                        );
+
+                        console.log(
+                            "Student exam:",
+                            student
+                        );
+
+                        console.log(
+                            "Available exams:",
+                            exams
+                        );
+
+                        return;
+                    }
+
+
+                    // ========================================
+                    // Set Exam
+                    // ========================================
+
+                    const examSelect =
+                        document.getElementById(
+                            "examSelect"
+                        );
+
+
+                    examSelect.value =
+                        exam.id;
+
+
+                    // ========================================
+                    // CREATE SUBJECT ROWS DIRECTLY
+                    // ========================================
+
+                    const subjectList =
+                        document.getElementById(
+                            "subjectList"
+                        );
+
+
+                    subjectList.innerHTML = "";
+
+
+                    if (
+                        !subjects ||
+                        subjects.length === 0
+                    ) {
+
+                        subjectList.innerHTML = `
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        style="text-align:center"
+                    >
+
+                        No subjects found.
+
+                    </td>
+
+                </tr>
+
+            `;
+
+                        return;
+                    }
+
+                    const classSubjects = subjects.filter(
+                        subject =>
+                            String(subject.class_name) ===
+                            String(exam.class_name)
+                    );
+
+                    document
+                        .getElementById("subjectList")
+                        .innerHTML = "";
+
+
+                    classSubjects.forEach(subject => {
+
+                        // ------------------------------------
+                        // Find saved subject result
+                        // ------------------------------------
+
+                        const saved =
+                            savedResults.find(item =>
+
+                                Number(item.subject_id) ===
+                                Number(subject.id)
+
+                            );
+
+
+                        const row =
+                            document.createElement("tr");
+
+
+                        const savedMarks =
+                            saved
+                                ? saved.marks
+                                : "";
+
+
+                        row.innerHTML = `
+
+                <td>
+                    ${subject.subject_name}
+                </td>
+
+                <td>
+                    ${subject.subject_code}
+                </td>
+
+                <td>
+                    ${subject.full_marks}
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+                        class="marks-input"
+
+                        min="0"
+
+                        max="${subject.full_marks}"
+
+                        data-subject-id="${subject.id}"
+
+                        data-full-marks="${subject.full_marks}"
+
+                        value="${savedMarks}"
+
+                        oninput="calculateGrade(this)"
+                    >
+
+                </td>
+
+                <td
+                    class="grade-preview"
+                    id="grade-${subject.id}"
+                >
+
+                    ${saved
+                                ? saved.grade
+                                : "-"
+                            }
+
+                </td>
+
+                <td
+                    id="point-${subject.id}"
+                >
+
+                    ${saved
+                                ? saved.grade_point
+                                : "-"
+                            }
+
+                </td>
+
+            `;
+
+
+                        subjectList.appendChild(row);
+
+
+                        // ====================================
+                        // Recalculate Grade Preview
+                        // ====================================
+
+                        const input =
+                            row.querySelector(
+                                ".marks-input"
+                            );
+
+
+                        if (
+                            input &&
+                            input.value !== ""
+                        ) {
+
+                            calculateGrade(input);
+
+                        }
+
+                    });
+
+
+                    // ========================================
+                    // Change Page Title
+                    // ========================================
+
+                    const saveButton =
+                        document.querySelector(
+                            ".save-button"
+                        );
+
+
+                    if (saveButton) {
+
+                        saveButton.textContent =
+                            "Update Result";
+
+                    }
+
+
+                    const subjectHeading =
+                        document.querySelector(
+                            ".box:nth-child(2) h2"
+                        );
+
+
+                    if (subjectHeading) {
+
+                        subjectHeading.textContent =
+                            "Edit Subject Marks";
+
+                    }
+
+
+                    console.log(
+                        "Edit result loaded successfully:",
+                        data
+                    );
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Load edit result error:",
+                        error
+                    );
+
+
+                    alert(
+                        "Server connection failed."
+                    );
+
+                }
+
+            }
+
+
+
+        // =========================
+        // Load Subjects
+        // =========================
+
+        async function loadSubjects() {
+
+            const response =
+                await fetch(
+                    "/api/admin/subjects"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                alert(data.message);
+
+                return;
+
+            }
+
+
+            subjects =
+                data.subjects;
+
+        }
+
+
+
+       // ========================================
+        // EXAM CHANGED - CLASS WISE SUBJECTS
+        // ========================================
+
+        document
+            .getElementById("examSelect")
+            .addEventListener("change", function () {
+
+                const examId = this.value;
+
+                const subjectList =
+                    document.getElementById("subjectList");
+
+                // Exam select না করলে
+                if (!examId) {
+
+                    subjectList.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        style="text-align:center"
+                    >
+                        Select an exam first.
+                    </td>
+                </tr>
+            `;
+
+                    return;
+                }
+
+
+                // Selected exam খুঁজে বের করা
+                const exam =
+                    exams.find(
+                        item =>
+                            String(item.id) ===
+                            String(examId)
+                    );
+
+
+                if (!exam) {
+
+                    subjectList.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        style="text-align:center"
+                    >
+                        Exam not found.
+                    </td>
+                </tr>
+            `;
+
+                    return;
+                }
+
+
+                // ========================================
+                // CLASS WISE SUBJECT FILTER
+                // ========================================
+
+                const classSubjects =
+                    subjects.filter(
+                        subject =>
+                            String(subject.class_name) ===
+                            String(exam.class_name)
+                    );
+
+
+                subjectList.innerHTML = "";
+
+
+                // ========================================
+                // NO SUBJECT
+                // ========================================
+
+                if (classSubjects.length === 0) {
+
+                    subjectList.innerHTML = `
+                <tr>
+                    <td
+                        colspan="6"
+                        style="text-align:center"
+                    >
+                        No subjects found for Class
+                        ${exam.class_name}.
+                    </td>
+                </tr>
+            `;
+
+                    return;
+                }
+
+
+                // ========================================
+                // CREATE SUBJECT ROWS
+                // ========================================
+
+                classSubjects.forEach(subject => {
+
+                    const row =
+                        document.createElement("tr");
+
+
+                    row.innerHTML = `
+
+                <td>
+                    ${subject.subject_name}
+                </td>
+
+                <td>
+                    ${subject.subject_code}
+                </td>
+
+                <td>
+                    ${subject.full_marks}
+                </td>
+
+                <td>
+
+                    <input
+                        type="number"
+
+                        class="marks-input"
+
+                        min="0"
+
+                        max="${subject.full_marks}"
+
+                        data-subject-id="${subject.id}"
+
+                        data-full-marks="${subject.full_marks}"
+
+                        placeholder="Marks"
+
+                        oninput="calculateGrade(this)"
+                    >
+
+                </td>
+
+                <td
+                    class="grade-preview"
+                    id="grade-${subject.id}"
+                >
+                    -
+                </td>
+
+                <td
+                    id="point-${subject.id}"
+                >
+                    -
+                </td>
+
+            `;
+
+
+                    subjectList.appendChild(row);
+
+                });
+
+            });
+
+
+
+        // =========================
+        // Calculate Grade
+        // =========================
+
+        function calculateGrade(input) {
+
+            const marks =
+                Number(input.value);
+
+            const fullMarks =
+                Number(
+                    input.dataset.fullMarks
+                );
+
+
+            const subjectId =
+                input.dataset.subjectId;
+
+
+            const gradeElement =
+                document.getElementById(
+                    `grade-${subjectId}`
+                );
+
+
+            const pointElement =
+                document.getElementById(
+                    `point-${subjectId}`
+                );
+
+
+            if (
+                input.value === "" ||
+                isNaN(marks)
+            ) {
+
+                gradeElement.textContent =
+                    "-";
+
+                pointElement.textContent =
+                    "-";
+
+                return;
+
+            }
+
+
+            if (
+                marks < 0 ||
+                marks > fullMarks
+            ) {
+
+                gradeElement.textContent =
+                    "Invalid";
+
+                pointElement.textContent =
+                    "0";
+
+                return;
+
+            }
+
+
+            const result =
+                getGrade(
+                    marks,
+                    fullMarks
+                );
+
+
+            gradeElement.textContent =
+                result.grade;
+
+            pointElement.textContent =
+                result.point;
+
+        }
+
+
+
+        // =========================
+        // Grading System
+        // =========================
+
+        function getGrade(
+            marks,
+            fullMarks
+        ) {
+
+            const percentage =
+                (marks / fullMarks) * 100;
+
+
+            if (percentage >= 80) {
+
+                return {
+                    grade: "A+",
+                    point: 5.00
+                };
+
+            }
+
+
+            if (percentage >= 70) {
+
+                return {
+                    grade: "A",
+                    point: 4.00
+                };
+
+            }
+
+
+            if (percentage >= 60) {
+
+                return {
+                    grade: "A-",
+                    point: 3.50
+                };
+
+            }
+
+
+            if (percentage >= 50) {
+
+                return {
+                    grade: "B",
+                    point: 3.00
+                };
+
+            }
+
+
+            if (percentage >= 40) {
+
+                return {
+                    grade: "C",
+                    point: 2.00
+                };
+
+            }
+
+
+            if (percentage >= 33) {
+
+                return {
+                    grade: "D",
+                    point: 1.00
+                };
+
+            }
+
+
+            return {
+                grade: "F",
+                point: 0.00
+            };
+
+        }
+
+
+
+        // =========================
+        // Save Result
+        // =========================
+
+        async function saveResult() {
+
+            const examId =
+                document.getElementById(
+                    "examSelect"
+                ).value;
+
+
+            const studentName =
+                document.getElementById(
+                    "studentName"
+                ).value.trim();
+
+
+            const roll =
+                document.getElementById(
+                    "roll"
+                ).value.trim();
+
+
+            const registration =
+                document.getElementById(
+                    "registration"
+                ).value.trim();
+
+
+            const groupName =
+                document.getElementById(
+                    "groupName"
+                ).value;
+
+
+            if (
+                !examId ||
+                !studentName ||
+                !roll
+            ) {
+
+                showMessage(
+                    "Please fill all required student information.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const exam =
+                exams.find(
+                    item =>
+                        String(item.id) ===
+                        String(examId)
+                );
+
+
+            const marksInputs =
+                document.querySelectorAll(
+                    ".marks-input"
+                );
+
+
+            const resultData = [];
+
+
+            for (
+                const input of marksInputs
+            ) {
+
+                if (
+                    input.value === ""
+                ) {
+
+                    continue;
+
+                }
+
+
+                const marks =
+                    Number(input.value);
+
+
+                const fullMarks =
+                    Number(
+                        input.dataset.fullMarks
+                    );
+
+
+                const subjectId =
+                    Number(
+                        input.dataset.subjectId
+                    );
+
+
+                if (
+                    marks < 0 ||
+                    marks > fullMarks
+                ) {
+
+                    showMessage(
+                        "Invalid marks found.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const grade =
+                    getGrade(
+                        marks,
+                        fullMarks
+                    );
+
+
+                const subject =
+                    subjects.find(
+                        item =>
+                            item.id ===
+                            subjectId
+                    );
+
+
+                resultData.push({
+
+                    subject_id:
+                        subjectId,
+
+                    subject_name:
+                        subject.subject_name,
+
+                    marks: marks,
+
+                    full_marks:
+                        fullMarks,
+
+                    grade:
+                        grade.grade,
+
+                    grade_point:
+                        grade.point,
+
+                    is_fourth_subject:
+                        subject.subject_type ===
+                            "fourth"
+                            ? 1
+                            : 0
+
+                });
+
+            }
+
+
+            if (
+                resultData.length === 0
+            ) {
+
+                showMessage(
+                    "Please enter marks for at least one subject.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const data = {
+
+                exam_id: Number(examId),
+
+                student: {
+
+                    name:
+                        studentName,
+
+                    roll:
+                        roll,
+
+                    registration:
+                        registration,
+
+                    class_name:
+                        exam.class_name,
+
+                    group_name:
+                        groupName,
+
+                    exam_name:
+                        exam.exam_name,
+
+                    exam_year:
+                        exam.exam_year
+
+                },
+
+                results:
+                    resultData
+
+            };
+
+            // ========================================
+            // UPDATE IF EDIT MODE
+            // ========================================
+
+            if (isEditMode) {
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/api/admin/results/${editId}`,
+                            {
+                                method: "PUT",
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify({
+                                        student:
+                                            data.student,
+
+                                        results:
+                                            resultData
+                                    })
+                            }
+                        );
+
+
+                    const result =
+                        await response.json();
+
+
+                    if (result.success) {
+
+                        showMessage(
+                            "Result updated successfully.",
+                            "success"
+                        );
+
+
+                        setTimeout(() => {
+
+                            window.location.href =
+                                "/pages/result-list.html";
+
+                        }, 1000);
+
+
+                    } else {
+
+                        showMessage(
+                            result.message ||
+                            "Could not update result.",
+                            "error"
+                        );
+
+                    }
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+
+                    showMessage(
+                        "Server connection failed.",
+                        "error"
+                    );
+
+                }
+
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/admin/results/individual",
+                        {
+
+                            method: "POST",
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(data)
+
+                        }
+                    );
+
+
+                const result =
+                    await response.json();
+
+
+                if (
+                    result.success
+                ) {
+
+                    showMessage(
+                        "Result saved successfully.",
+                        "success"
+                    );
+
+                } else {
+
+                    showMessage(
+                        result.message,
+                        "error"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showMessage(
+                    "Server connection failed.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        // =========================
+        // Show Message
+        // =========================
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            message.textContent =
+                text;
+
+
+            message.className =
+                "message " + type;
+
+
+            message.style.display =
+                "block";
+
+        }
+
+
+
+        // =========================
+        // Clear
+        // =========================
+
+        function clearForm() {
+
+            document
+                .getElementById(
+                    "studentName"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "roll"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "registration"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "groupName"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "examSelect"
+                )
+                .value = "";
+
+
+            document
+                .getElementById(
+                    "subjectList"
+                )
+                .innerHTML = `
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            style="text-align:center"
+                        >
+                            Select an exam first.
+                        </td>
+
+                    </tr>
+
+                `;
+
+        }
+
+
+
+        // =========================
+        // Back
+        // =========================
+
+        function goBack() {
+
+            window.location.href =
+                "/pages/admin.html";
+
+        }
+
+
+
+        // =========================
+        // Start
+        // =========================
+
+        async function startPage() {
+
+                const loggedIn =
+                    await checkLogin();
+
+
+                if (!loggedIn) {
+
+                    return;
+
+                }
+
+
+                await loadExams();
+
+                await loadSubjects();
+
+
+                // ========================================
+                // EDIT MODE
+                // ========================================
+
+                if (isEditMode) {
+
+                    await loadEditResult(editId);
+
+                }
+
+            }
+
+
+        startPage();
+
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title>Shaheed Nur Hossain Memorial School</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            background:
+                linear-gradient(135deg,
+                    #e3f2fd,
+                    #f5f7fa);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 520px;
+
+            padding: 50px 35px;
+
+            text-align: center;
+
+            background: white;
+
+            border-radius: 20px;
+
+            box-shadow:
+                0 15px 40px rgba(0, 0, 0, 0.12);
+        }
+
+        .school-icon {
+            width: 100px;
+            height: 100px;
+
+            margin: 0 auto 40px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            border-radius: 50%;
+
+            background: #f0f2f3;
+
+            color: rgb(247, 14, 14);
+
+            font-size: 45px;
+        }
+
+        .school-name {
+            font-size: 26px;
+            font-weight: bold;
+
+            color: #030305;
+
+            margin-bottom: 10px;
+        }
+
+        .system-name {
+            font-size: 16px;
+
+            color: #666;
+
+            margin-bottom: 35px;
+        }
+
+        .buttons {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 15px;
+        }
+
+        .btn {
+            width: 100%;
+
+            padding: 15px 20px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            text-decoration: none;
+
+            display: block;
+        }
+
+        .search-btn {
+            background: #1976d2;
+            color: white;
+        }
+
+        .search-btn:hover {
+            background: #125ca8;
+
+            transform: translateY(-2px);
+        }
+
+        .admin-btn {
+            background: #424242;
+            color: white;
+        }
+
+        .admin-btn:hover {
+            background: #222;
+
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 30px;
+
+            color: #999;
+
+            font-size: 13px;
+        }
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: 90%;
+
+                padding: 40px 25px;
+            }
+
+            .school-name {
+                font-size: 24px;
+            }
+
+        }
+    </style>
+    
+
+</head>
+
+<body>
+
+    
+    <div class="container">
+
+        <!-- SCHOOL ICON -->
+
+        <div class="school-icon">
+            <img id="schoolLogo" class="school-logo" src="/6716-removebg-preview.png" alt="School Logo"
+                style="width: 150px; height: 150px;">
+        </div>
+
+
+        <!-- SCHOOL NAME -->
+
+        <div class="school-name">
+            Shaheed Nur Hossain Memorial School
+        </div>
+
+
+        
+
+
+        <!-- BUTTONS -->
+
+        <div class="buttons">
+
+            <!-- SEARCH RESULT -->
+
+            <a href="/pages/result-search.html" class="btn search-btn">
+                Search Result
+            </a>
+
+
+            <!-- ADMIN LOGIN -->
+
+            <a href="/pages/admin-login.html" class="btn admin-btn">
+                🔐 Admin Login
+            </a>
+
+        </div>
+
+
+        <!-- FOOTER -->
+
+        <div class="footer">
+            © 2026 School Result Management System
+        </div>
+
+    </div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Excel Bulk Result</title>
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1f5f9;
+
+        }
+
+
+        .header {
+
+            background: #1e3a8a;
+
+            color: white;
+
+            padding: 18px 30px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+
+        .header h2 {
+            margin: 0;
+        }
+
+
+        .back {
+
+            background: white;
+
+            color: #1e3a8a;
+
+            border: none;
+
+            padding: 9px 16px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .container {
+
+            max-width: 1400px;
+
+            margin: 30px auto;
+
+            padding: 20px;
+
+        }
+
+
+        .box {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+
+        }
+
+
+        .form-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(220px, 1fr));
+
+            gap: 18px;
+
+        }
+
+
+        .form-group {
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        label {
+
+            font-weight: bold;
+
+            margin-bottom: 7px;
+
+            color: #334155;
+
+        }
+
+
+        select,
+        input {
+
+            padding: 11px;
+
+            border: 1px solid #cbd5e1;
+
+            border-radius: 6px;
+
+            font-size: 15px;
+
+        }
+
+
+        .buttons {
+
+            display: flex;
+
+            gap: 12px;
+
+            margin-top: 20px;
+
+            flex-wrap: wrap;
+
+        }
+
+
+        button {
+
+            border: none;
+
+            padding: 12px 20px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .preview {
+
+            background: #2563eb;
+
+            color: white;
+
+        }
+
+
+        .upload {
+
+            background: #16a34a;
+
+            color: white;
+
+        }
+
+
+        .clear {
+
+            background: #64748b;
+
+            color: white;
+
+        }
+
+
+        .download {
+
+            background: #7c3aed;
+
+            color: white;
+
+        }
+
+
+        button:hover {
+
+            opacity: 0.9;
+
+        }
+
+
+        .table-container {
+
+            overflow-x: auto;
+
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse: collapse;
+
+            margin-top: 20px;
+
+        }
+
+
+        th {
+
+            background: #1e3a8a;
+
+            color: white;
+
+            padding: 10px;
+
+            white-space: nowrap;
+
+        }
+
+
+        td {
+
+            padding: 9px;
+
+            border-bottom:
+                1px solid #e2e8f0;
+
+            white-space: nowrap;
+
+        }
+
+
+        .message {
+
+            margin-top: 15px;
+
+            padding: 12px;
+
+            border-radius: 6px;
+
+            display: none;
+
+        }
+
+
+        .success {
+
+            background: #dcfce7;
+
+            color: #166534;
+
+        }
+
+
+        .error {
+
+            background: #fee2e2;
+
+            color: #991b1b;
+
+        }
+
+
+        .info {
+
+            background: #dbeafe;
+
+            color: #1e40af;
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <header class="header">
+
+        <h2>
+            Excel Bulk Result
+        </h2>
+
+
+        <button class="back" onclick="goBack()">
+            Back to Dashboard
+        </button>
+
+    </header>
+
+
+
+    <div class="container">
+
+
+        <!-- =========================
+         EXAM
+    ========================= -->
+
+        <div class="box">
+
+            <h2>
+                Select Examination
+            </h2>
+
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        Exam
+                    </label>
+
+                    <select id="examSelect">
+
+                        <option value="">
+                            Select Exam
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Excel File
+                    </label>
+
+                    <input type="file" id="excelFile" accept=".xlsx,.xls">
+
+                </div>
+
+            </div>
+
+
+            <div class="buttons">
+
+                <button class="download" onclick="downloadDemo()">
+                    Download Excel Demo
+                </button>
+
+
+                <button class="preview" onclick="previewExcel()">
+                    Preview Excel
+                </button>
+
+
+                <button class="upload" onclick="uploadExcel()">
+                    Import Result
+                </button>
+
+
+                <button class="clear" onclick="clearPreview()">
+                    Clear
+                </button>
+
+            </div>
+
+
+            <div id="message" class="message"></div>
+
+        </div>
+
+
+
+        <!-- =========================
+         PREVIEW
+    ========================= -->
+
+        <div class="box">
+
+            <h2>
+                Excel Preview
+            </h2>
+
+
+            <div class="table-container">
+
+                <table>
+
+                    <thead id="previewHead">
+
+                        <tr>
+
+                            <th>
+                                Preview
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="previewBody">
+
+                        <tr>
+
+                            <td style="text-align:center">
+
+                                Upload an Excel file
+                                and click Preview.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+    <script>
+
+        let exams = [];
+
+        let previewData = [];
+
+
+        // ========================================
+        // CHECK LOGIN
+        // ========================================
+
+        async function checkLogin() {
+
+            const response =
+                await fetch(
+                    "/api/admin/me"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.loggedIn) {
+
+                window.location.href =
+                    "/pages/admin-login.html";
+
+                return false;
+
+            }
+
+
+            return true;
+
+        }
+
+
+
+        // ========================================
+        // LOAD EXAMS
+        // ========================================
+
+        async function loadExams() {
+
+            const response =
+                await fetch(
+                    "/api/admin/exams"
+                );
+
+
+            const data =
+                await response.json();
+
+
+            if (!data.success) {
+
+                showMessage(
+                    data.message,
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            exams =
+                data.exams;
+
+
+            const select =
+                document.getElementById(
+                    "examSelect"
+                );
+
+
+            exams.forEach(exam => {
+
+                const option =
+                    document.createElement(
+                        "option"
+                    );
+
+
+                option.value =
+                    exam.id;
+
+
+                option.textContent =
+                    `${exam.exam_name} - Class ${exam.class_name} - ${exam.exam_year}`;
+
+
+                select.appendChild(option);
+
+            });
+
+        }
+
+
+
+        // ========================================
+        // PREVIEW EXCEL
+        // ========================================
+
+        async function previewExcel() {
+
+            const file =
+                document.getElementById(
+                    "excelFile"
+                ).files[0];
+
+
+            if (!file) {
+
+                showMessage(
+                    "Please select an Excel file.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "excelFile",
+                file
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/admin/bulk-preview",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.success) {
+
+                    showMessage(
+                        data.message,
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                previewData =
+                    data.rows;
+
+
+                displayPreview(
+                    previewData
+                );
+
+
+                showMessage(
+                    `${previewData.length} rows loaded successfully.`,
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showMessage(
+                    "Server connection failed.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        // ========================================
+        // DISPLAY PREVIEW
+        // ========================================
+
+        function displayPreview(rows) {
+
+            const head =
+                document.getElementById(
+                    "previewHead"
+                );
+
+
+            const body =
+                document.getElementById(
+                    "previewBody"
+                );
+
+
+            if (
+                !rows ||
+                rows.length === 0
+            ) {
+
+                body.innerHTML = `
+
+                <tr>
+
+                    <td>
+                        No data found.
+                    </td>
+
+                </tr>
+
+            `;
+
+                return;
+
+            }
+
+
+            const columns =
+                Object.keys(rows[0]);
+
+
+            head.innerHTML =
+                "<tr>" +
+                columns.map(
+                    column =>
+                        `<th>${column}</th>`
+                ).join("") +
+                "</tr>";
+
+
+            body.innerHTML = "";
+
+
+            rows.forEach(row => {
+
+                const tr =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                tr.innerHTML =
+                    columns.map(
+                        column =>
+                            `<td>${row[column] ?? ""
+                            }</td>`
+                    ).join("");
+
+
+                body.appendChild(tr);
+
+            });
+
+        }
+
+
+
+        // ========================================
+        // IMPORT EXCEL
+        // ========================================
+
+        async function uploadExcel() {
+
+            const file =
+                document.getElementById(
+                    "excelFile"
+                ).files[0];
+
+
+            const examId =
+                document.getElementById(
+                    "examSelect"
+                ).value;
+
+
+            if (!examId) {
+
+                showMessage(
+                    "Please select an exam.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (!file) {
+
+                showMessage(
+                    "Please select an Excel file.",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const formData =
+                new FormData();
+
+
+            formData.append(
+                "excelFile",
+                file
+            );
+
+
+            formData.append(
+                "exam_id",
+                examId
+            );
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/admin/bulk-import",
+                        {
+                            method: "POST",
+                            body: formData
+                        }
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (data.success) {
+
+                    showMessage(
+                        data.message ||
+                        "Bulk result imported successfully.",
+                        "success"
+                    );
+
+
+                    clearPreview();
+
+                } else {
+
+                    showMessage(
+                        data.message ||
+                        "Import failed.",
+                        "error"
+                    );
+
+                }
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showMessage(
+                    "Server connection failed.",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+
+        // ========================================
+        // DOWNLOAD DEMO
+        // ========================================
+
+        function downloadDemo() {
+
+            window.location.href =
+                "/api/admin/download-excel-demo";
+
+        }
+
+
+
+        // ========================================
+        // CLEAR
+        // ========================================
+
+        function clearPreview() {
+
+            document.getElementById(
+                "excelFile"
+            ).value = "";
+
+
+            previewData = [];
+
+
+            document.getElementById(
+                "previewHead"
+            ).innerHTML = `
+
+            <tr>
+
+                <th>
+                    Preview
+                </th>
+
+            </tr>
+
+        `;
+
+
+            document.getElementById(
+                "previewBody"
+            ).innerHTML = `
+
+            <tr>
+
+                <td
+                    style="text-align:center"
+                >
+
+                    Upload an Excel file
+                    and click Preview.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        }
+
+
+
+        // ========================================
+        // MESSAGE
+        // ========================================
+
+        function showMessage(
+            text,
+            type
+        ) {
+
+            const message =
+                document.getElementById(
+                    "message"
+                );
+
+
+            message.textContent =
+                text;
+
+
+            message.className =
+                "message " + type;
+
+
+            message.style.display =
+                "block";
+
+        }
+
+
+
+        // ========================================
+        // BACK
+        // ========================================
+
+        function goBack() {
+
+            window.location.href =
+                "/pages/admin.html";
+
+        }
+
+
+
+        // ========================================
+        // START
+        // ========================================
+
+        async function startPage() {
+
+            const loggedIn =
+                await checkLogin();
+
+
+            if (!loggedIn) {
+
+                return;
+
+            }
+
+
+            await loadExams();
+
+        }
+
+
+        startPage();
+
+    </script>
+
+
+</body>
+
+</html>

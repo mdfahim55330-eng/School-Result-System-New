@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+
+            font-family: Arial, sans-serif;
+
+            background: #f1f5f9;
+        }
+
+
+        /* =========================
+           Header
+        ========================= */
+
+        .header {
+
+            background: #1e3a8a;
+
+            color: white;
+
+            padding: 18px 30px;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+        }
+
+
+        .header h2 {
+            margin: 0;
+        }
+
+
+        .logout {
+
+            background: #dc2626;
+
+            color: white;
+
+            border: none;
+
+            padding: 9px 16px;
+
+            border-radius: 6px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+        }
+
+
+        .logout:hover {
+            background: #b91c1c;
+        }
+
+
+        /* =========================
+           Main Container
+        ========================= */
+
+        .container {
+
+            padding: 30px;
+
+            max-width: 1300px;
+
+            margin: auto;
+        }
+
+
+        /* =========================
+           Welcome
+        ========================= */
+
+        .welcome {
+
+            margin-bottom: 25px;
+        }
+
+
+        .welcome h2 {
+            margin-bottom: 8px;
+        }
+
+
+        .welcome p {
+            color: #64748b;
+        }
+
+
+        /* =========================
+           Management Section
+        ========================= */
+
+        .management-section {
+
+            margin-top: 10px;
+
+            margin-bottom: 30px;
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .management-section h2 {
+
+            margin-top: 0;
+
+            margin-bottom: 20px;
+        }
+
+
+        .management-buttons {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(200px, 1fr));
+
+            gap: 15px;
+        }
+
+
+        /* =========================
+           Management Buttons
+        ========================= */
+
+        .management-buttons button,
+        .management-buttons a {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 7px;
+
+            background: #2563eb;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            min-height: 50px;
+        }
+
+
+        .management-buttons button:hover,
+        .management-buttons a:hover {
+
+            background: #1d4ed8;
+        }
+
+
+        /* =========================
+           Dashboard Cards
+        ========================= */
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit,
+                    minmax(200px, 1fr));
+
+            gap: 20px;
+        }
+
+
+        .card {
+
+            background: white;
+
+            padding: 25px;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+
+        .card h3 {
+
+            margin-top: 0;
+
+            color: #475569;
+        }
+
+
+        .number {
+
+            font-size: 32px;
+
+            font-weight: bold;
+
+            color: #1d4ed8;
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         HEADER
+    ========================= -->
+
+    <header class="header">
+
+        <h2>
+            Shaheed Nur Hossain Memorial School, Result Management System
+        </h2>
+
+
+        <button class="logout" onclick="logout()">
+            Logout
+        </button>
+
+    </header>
+
+
+
+    <!-- =========================
+         MAIN CONTAINER
+    ========================= -->
+
+    <div class="container">
+
+
+        <!-- Welcome -->
+
+        <div class="welcome">
+
+            <h2>
+                Welcome,
+                <span id="username"></span>
+            </h2>
+
+            <p>
+                Manage your school's results from here.
+            </p>
+
+        </div>
+
+
+
+        <!-- =========================
+             RESULT MANAGEMENT
+        ========================= -->
+
+        <div class="management-section">
+
+            <h2>
+                Result Management System
+            </h2>
+
+
+            <div class="management-buttons">
+
+
+                <!-- Subject Management -->
+
+                <a href="/pages/subjects.html">
+                    Subject Management
+                </a>
+
+
+
+                <!-- Exam Management -->
+
+                <a href="/pages/exams.html">
+                    Exam Management
+                </a>
+
+
+
+                <!-- Individual Result -->
+
+                <a href="/pages/individual-result.html">
+                    Individual Result
+                </a>
+
+                <a href="/pages/result-list.html">
+                    Result Management
+                </a>
+
+                <!-- Excel Bulk Result -->
+
+                <a href="/pages/bulk-result.html">
+                    Excel Bulk Result
+                </a>
+
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =========================
+             DASHBOARD CARDS
+        ========================= -->
+
+        <div class="cards">
+
+
+            <!-- Total Students -->
+
+            <div class="card">
+
+                <h3>
+                    Total Students
+                </h3>
+
+                <div class="number" id="totalStudents">
+                    0
+                </div>
+
+            </div>
+
+
+
+            <!-- Total Results -->
+
+            <div class="card">
+
+                <h3>
+                    Total Results
+                </h3>
+
+                <div class="number" id="totalResults">
+                    0
+                </div>
+
+            </div>
+
+
+
+            <!-- Published Results -->
+
+            <div class="card">
+
+                <h3>
+                    Published Results
+                </h3>
+
+                <div class="number" id="publishedResults">
+                    0
+                </div>
+
+            </div>
+
+
+
+            <!-- Draft Results -->
+
+            <div class="card">
+
+                <h3>
+                    Draft Results
+                </h3>
+
+                <div class="number" id="draftResults">
+                    0
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================= -->
+
+    <script>
+
+
+        // =========================
+        // Check Admin Login
+        // =========================
+
+        async function checkLogin() {
+            
+            try {
+
+                const response =
+                    await fetch(
+                        "/api/admin/me"
+                    );
+
+
+                const data =
+                    await response.json();
+
+
+                if (!data.loggedIn) {
+
+                    window.location.href =
+                        "/pages/admin-login.html";
+
+                    return;
+                }
+
+
+                document
+                    .getElementById("username")
+                    .textContent =
+                    data.username;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Login check error:",
+                    error
+                );
+
+                window.location.href =
+                    "/pages/admin-login.html";
+
+            }
+
+        }
+
+
+
+        // =========================
+        // Individual Result
+        // =========================
+
+        function openIndividualResult() {
+
+            alert(
+                "Individual Result module will be added in the next step."
+            );
+
+        }
+
+
+
+        // =========================
+        // Excel Bulk Result
+        // =========================
+
+        function openBulkResult() {
+
+            alert(
+                "Excel Bulk Result module will be added soon."
+            );
+
+        }
+
+
+
+        // =========================
+        // Logout
+        // =========================
+
+        async function logout() {
+
+            try {
+
+                await fetch(
+                    "/api/admin/logout",
+                    {
+                        method: "POST"
+                    }
+                );
+
+
+                window.location.href =
+                    "/pages/admin-login.html";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Logout error:",
+                    error
+                );
+
+            }
+
+        }
+
+
+
+        // =========================
+        // Start
+        // =========================
+
+        async function loadDashboardStats() {
+
+            try {
+
+                const response = await fetch(
+                    "/api/admin/dashboard-stats"
+                );
+
+                const data = await response.json();
+
+                if (!data.success) {
+
+                    console.error(
+                        data.message);
+
+                     return;
+                }
+
+                document.getElementById(
+                    "totalStudents"
+                ).textContent =
+                    data.totalStudents;
+
+                document.getElementById(
+                    "totalResults"
+                ).textContent =
+                    data.totalResults;
+
+                    document.getElementById(
+                     "publishedResults"
+                ).textContent =
+                    data.publishedResults;
+
+                document.getElementById(
+                    "draftResults"
+                ).textContent =
+                    data.draftResults;
+
+            } catch (error) {
+
+                console.error(
+                    "Dashboard stats error:",
+                    error
+                );
+
+            }
+
+        }
+            
+            checkLogin();
+        
+            loadDashboardStats();
+
+
+    </script>
+
+
+</body>
+
+</html>
