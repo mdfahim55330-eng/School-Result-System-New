@@ -599,7 +599,9 @@ app.delete(
 // EXAM APIs
 // =====================================================
 
+// ========================================
 // GET ALL EXAMS
+// ========================================
 
 app.get(
     "/api/admin/exams",
@@ -608,14 +610,25 @@ app.get(
 
         db.all(
             `
-            SELECT *
+            SELECT
+                MIN(id) AS id,
+                exam_name,
+                exam_year,
+                class_name
             FROM exams
+            WHERE
+                exam_name IS NOT NULL
+                AND TRIM(exam_name) <> ''
+            GROUP BY
+                exam_name,
+                exam_year,
+                class_name
             ORDER BY
                 exam_year DESC,
-                id DESC
+                class_name ASC,
+                exam_name ASC
             `,
             [],
-
             (err, rows) => {
 
                 if (err) {
@@ -628,14 +641,14 @@ app.get(
                     return res.status(500).json({
                         success: false,
                         message:
-                            err.message
+                            "Exam list could not be loaded."
                     });
 
                 }
 
                 res.json({
                     success: true,
-                    exams: rows
+                    exams: rows || []
                 });
 
             }
@@ -643,6 +656,8 @@ app.get(
 
     }
 );
+
+
 
 
 // ADD EXAM
@@ -4523,6 +4538,221 @@ app.get(
 
                     }
                 );
+
+            }
+        );
+
+    }
+);
+
+// =====================================================
+// MARKSHEET MANAGEMENT APIs
+// =====================================================
+
+
+// ========================================
+// GET ALL CLASSES FOR MARKSHEET MANAGEMENT
+// ========================================
+
+app.get(
+    "/api/admin/marksheet/classes",
+    requireAdmin,
+    (req, res) => {
+
+        db.all(
+            `
+            SELECT DISTINCT class_name
+            FROM students
+            WHERE class_name IS NOT NULL
+            AND TRIM(class_name) <> ''
+            ORDER BY class_name ASC
+            `,
+            [],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(
+                        "Load marksheet classes error:",
+                        err.message
+                    );
+
+                    return res.status(500).json({
+                        success: false,
+                        message:
+                            "Class list could not be loaded."
+                    });
+
+                }
+
+
+                const classes =
+                    rows.map(
+                        row => row.class_name
+                    );
+
+
+                res.json({
+                    success: true,
+                    classes: classes
+                });
+
+            }
+        );
+
+    }
+);
+
+
+
+// ========================================
+// GET ALL EXAM YEARS
+// ========================================
+
+app.get(
+    "/api/admin/marksheet/years",
+    requireAdmin,
+    (req, res) => {
+
+        db.all(
+            `
+            SELECT DISTINCT exam_year
+            FROM students
+            WHERE exam_year IS NOT NULL
+            ORDER BY exam_year DESC
+            `,
+            [],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(
+                        "Load marksheet years error:",
+                        err.message
+                    );
+
+                    return res.status(500).json({
+                        success: false,
+                        message:
+                            "Exam year list could not be loaded."
+                    });
+
+                }
+
+
+                const years =
+                    rows.map(
+                        row => row.exam_year
+                    );
+
+
+                res.json({
+                    success: true,
+                    years: years
+                });
+
+            }
+        );
+
+    }
+);
+
+
+
+// ========================================
+// GET STUDENTS FOR SELECTED MARKSHEET
+// ========================================
+
+app.get(
+    "/api/admin/marksheets",
+    requireAdmin,
+    (req, res) => {
+
+        const {
+            class_name,
+            exam_year,
+            exam_name
+        } = req.query;
+
+
+        // ========================================
+        // VALIDATION
+        // ========================================
+
+        if (
+            !class_name ||
+            !exam_year ||
+            !exam_name
+        ) {
+
+            return res.status(400).json({
+                success: false,
+                message:
+                    "Class, Exam Year and Exam Name are required."
+            });
+
+        }
+
+
+        // ========================================
+        // GET STUDENTS
+        // ========================================
+
+        db.all(
+            `
+            SELECT
+                id,
+                name,
+                roll,
+                registration,
+                class_name,
+                group_name,
+                exam_name,
+                exam_year,
+                institute_name,
+                eiin,
+                status
+            FROM students
+            WHERE
+                class_name = ?
+                AND exam_year = ?
+                AND exam_name = ?
+            ORDER BY
+                CAST(roll AS INTEGER) ASC,
+                roll ASC,
+                id ASC
+            `,
+            [
+                class_name,
+                Number(exam_year),
+                exam_name
+            ],
+            (err, rows) => {
+
+                if (err) {
+
+                    console.error(
+                        "Load marksheets error:",
+                        err.message
+                    );
+
+                    return res.status(500).json({
+                        success: false,
+                        message:
+                            "Marksheets could not be loaded."
+                    });
+
+                }
+
+
+                res.json({
+
+                    success: true,
+
+                    students:
+                        rows || []
+
+                });
 
             }
         );
