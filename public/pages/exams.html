@@ -45,7 +45,7 @@
         const user = await App.shell("exams");
         if (!user) return;
         isAdmin = user.role === "admin";
-        App.fillSelect(App.$("#class_name"), App.CLASS_ORDER.map(function (c) { return { value: c, label: "Class " + c }; }), "Select");
+        App.fillSelect(App.$("#class_name"), await App.loadClasses(), "Select");
         App.$("#exam_year").value = new Date().getFullYear();
         if (isAdmin) App.$("#add-card").classList.remove("hidden"); else App.$("#act-h").textContent = "";
         App.$("#rows").onclick = async function (e) {
