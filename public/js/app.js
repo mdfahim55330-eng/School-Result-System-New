@@ -184,7 +184,8 @@
             group: "Reports", items: [
                 { href: "/pages/merit-list.html", label: "Merit List", icon: "trophy", key: "merit" },
                 { href: "/pages/tabulation.html", label: "Tabulation Sheet", icon: "table", key: "tabulation" },
-                { href: "/pages/statistics.html", label: "Statistics", icon: "chart", key: "statistics" }
+                { href: "/pages/statistics.html", label: "Statistics", icon: "chart", key: "statistics" },
+                { href: "/pages/marksheet-management.html", label: "Marksheet Management", icon: "pdf", key: "marksheet" }
             ]
         },
         { group: "System", admin: true, items: [{ href: "/pages/users.html", label: "Users & Activity", icon: "users", key: "users" }] }
