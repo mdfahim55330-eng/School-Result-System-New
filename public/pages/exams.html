@@ -131,59 +131,7 @@
 
 
                     <select id="class_name" required>
-
-                        <option value="">
-                            Select Class
-                        </option>
-
-                        <option value="Play-1">
-                            Play-1
-                        </option>
-
-                        <option value="Play-2">
-                            Play-2
-                        </option>
-
-                        <option value="One">
-                            One
-                        </option>
-
-                        <option value="Two">
-                            Two
-                        </option>
-
-                        <option value="Three">
-                            Three
-                        </option>
-
-                        <option value="Four">
-                            Four
-                        </option>
-
-                        <option value="Five">
-                            Five
-                        </option>
-
-                        <option value="Six">
-                            Six
-                        </option>
-
-                        <option value="Seven">
-                            Seven
-                        </option>
-
-                        <option value="Eight">
-                            Eight
-                        </option>
-
-                        <option value="Nine">
-                            Nine
-                        </option>
-
-                        <option value="Ten">
-                            Ten
-                        </option>
-
+                        <option value="">Select Class</option>
                     </select>
 
 
@@ -260,6 +208,51 @@
 
                 window.location.href =
                     "/pages/admin-login.html";
+
+            }
+
+        }
+
+
+        async function loadClasses() {
+
+            try {
+
+                const response = await fetch("/api/admin/classes");
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(
+                        data.message || "Could not load classes."
+                    );
+                }
+
+                const select =
+                    document.getElementById("class_name");
+
+                select.innerHTML =
+                    '<option value="">Select Class</option>';
+
+                (data.classes || []).forEach(item => {
+
+                    const option =
+                        document.createElement("option");
+
+                    option.value = item.class_name;
+                    option.textContent = item.class_name;
+
+                    select.appendChild(option);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Load classes error:",
+                    error
+                );
+
+                alert("Could not load classes.");
 
             }
 
@@ -447,6 +440,7 @@
 
 
         checkLogin();
+        loadClasses();
         loadExams();
 
     </script>
