@@ -4220,13 +4220,13 @@ function calculatePosition(
 
 
                     if (
-                        previousMarks === null ||
+                        previousMarks === null
+                    ) {
+                        position = 1;
+                    } else if (
                         marks !== previousMarks
                     ) {
-
-                        position =
-                            index + 1;
-
+                        position++;
                     }
 
 
