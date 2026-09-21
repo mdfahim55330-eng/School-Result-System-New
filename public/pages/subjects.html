@@ -225,58 +225,7 @@
                         </label>
 
                         <select id="class_name" required>
-
-                            <option value="">
-                                Select Class
-                            </option>
-
-                            <option value="Play-1">
-                                Play-1
-                            </option>
-                            
-                            <option value="Play-2">
-                                Play-2
-                            </option>
-                            
-                            <option value="One">
-                                One
-                            </option>
-                            
-                            <option value="Two">
-                                Two
-                            </option>
-                            
-                            <option value="Three">
-                                Three
-                            </option>
-                            
-                            <option value="Four">
-                                Four
-                            </option>
-                            
-                            <option value="Five">
-                                Five
-                            </option>
-                            
-                            <option value="Six">
-                                Six
-                            </option>
-                            
-                            <option value="Seven">
-                                Seven
-                            </option>
-                            
-                            <option value="Eight">
-                                Eight
-                            </option>
-                            
-                            <option value="Nine">
-                                Nine
-                            </option>
-                            
-                            <option value="Ten">
-                                Ten
-                            </option>
+                            <option value="">Select Class</option>
                         </select>
 
                     </div>
@@ -385,59 +334,7 @@
             <div class="filter-area">
 
                 <select id="filterClass">
-
-                    <option value="">
-                        All Classes
-                    </option>
-
-                    <option value="Play-1">
-                        Play-1
-                    </option>
-                    
-                    <option value="Play-2">
-                        Play-2
-                    </option>
-                    
-                    <option value="One">
-                        One
-                    </option>
-                    
-                    <option value="Two">
-                        Two
-                    </option>
-                    
-                    <option value="Three">
-                        Three
-                    </option>
-                    
-                    <option value="Four">
-                        Four
-                    </option>
-                    
-                    <option value="Five">
-                        Five
-                    </option>
-                    
-                    <option value="Six">
-                        Six
-                    </option>
-                    
-                    <option value="Seven">
-                        Seven
-                    </option>
-                    
-                    <option value="Eight">
-                        Eight
-                    </option>
-                    
-                    <option value="Nine">
-                        Nine
-                    </option>
-                    
-                    <option value="Ten">
-                        Ten
-                    </option>
-
+                    <option value="">All Classes</option>
                 </select>
 
             </div>
@@ -543,6 +440,69 @@
         // ========================================
 
         let allSubjects = [];
+
+
+        // ========================================
+        // LOAD CLASSES
+        // ========================================
+
+        async function loadClasses() {
+
+            try {
+
+                const response = await fetch("/api/admin/classes");
+                const data = await response.json();
+
+                if (!data.success) {
+                    throw new Error(
+                        data.message || "Could not load classes."
+                    );
+                }
+
+                const classSelect =
+                    document.getElementById("class_name");
+
+                const filterSelect =
+                    document.getElementById("filterClass");
+
+                classSelect.innerHTML =
+                    '<option value="">Select Class</option>';
+
+                filterSelect.innerHTML =
+                    '<option value="">All Classes</option>';
+
+                (data.classes || []).forEach(item => {
+
+                    const option1 =
+                        document.createElement("option");
+
+                    option1.value = item.class_name;
+                    option1.textContent = item.class_name;
+
+                    classSelect.appendChild(option1);
+
+                    const option2 =
+                        document.createElement("option");
+
+                    option2.value = item.class_name;
+                    option2.textContent = item.class_name;
+
+                    filterSelect.appendChild(option2);
+
+                });
+
+            } catch (error) {
+
+                console.error(
+                    "Load classes error:",
+                    error
+                );
+
+                alert("Could not load classes.");
+
+            }
+
+        }
 
 
         // ========================================
@@ -938,6 +898,7 @@
 
         checkLogin();
 
+        loadClasses();
         loadSubjects();
 
     </script>
