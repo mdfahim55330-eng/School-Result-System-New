@@ -27,7 +27,6 @@ const STAFF_PAGES = {
     "merit-list": "any",
     "tabulation": "any",
     "statistics": "any",
-    "marksheet-management": "any",
     "users": "admin"
 };
 
