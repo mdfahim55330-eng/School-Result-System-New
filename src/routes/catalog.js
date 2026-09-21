@@ -11,6 +11,58 @@ const { calculateFinalGPA } = require("../services/grading");
 const router = express.Router();
 
 // ===========================================================================
+// CLASSES
+// ===========================================================================
+
+router.get("/classes", async (req, res) => {
+    const classes = await db.all(`SELECT id, class_name, created_at FROM classes ORDER BY class_name ASC`);
+    res.json({ success: true, classes });
+});
+
+const classSchema = z.object({
+    class_name: text(50, "Class")
+});
+
+router.post("/classes", requireAdminRole, async (req, res) => {
+    const data = parse(classSchema, req.body || {});
+    const existing = await db.one(`SELECT id FROM classes WHERE LOWER(TRIM(class_name)) = LOWER(TRIM(?))`, [data.class_name]);
+    if (existing) throw httpError(400, "This class already exists.");
+
+    let inserted;
+    try {
+        inserted = await db.one(`INSERT INTO classes (class_name) VALUES (?) RETURNING id`, [data.class_name]);
+    } catch (error) {
+        if (error.code === "23505") throw httpError(400, "This class already exists.");
+        throw error;
+    }
+
+    await audit.log(req, "class_created", "class", inserted.id, `Added class ${data.class_name}`, data);
+    res.json({ success: true, message: "Class added successfully.", id: inserted.id });
+});
+
+router.delete("/classes/:id", requireAdminRole, async (req, res) => {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id)) throw httpError(400, "Invalid class id.");
+
+    const item = await db.one(`SELECT * FROM classes WHERE id = ?`, [id]);
+    if (!item) throw httpError(404, "Class not found.");
+
+    const usage = await db.one(`SELECT
+        (SELECT COUNT(*) FROM students WHERE class_name = ?) +
+        (SELECT COUNT(*) FROM exams WHERE class_name = ?) +
+        (SELECT COUNT(*) FROM subjects WHERE class_name = ?) AS total`,
+        [item.class_name, item.class_name, item.class_name]
+    );
+    if (Number(usage.total) > 0) {
+        throw httpError(409, `Class "${item.class_name}" is already used by existing students, exams or subjects. Delete those records first.`);
+    }
+
+    await db.query(`DELETE FROM classes WHERE id = ?`, [id]);
+    await audit.log(req, "class_deleted", "class", id, `Deleted class ${item.class_name}`, item);
+    res.json({ success: true, message: "Class deleted successfully." });
+});
+
+// ===========================================================================
 // SUBJECTS
 // ===========================================================================
 
