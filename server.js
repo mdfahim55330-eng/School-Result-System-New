@@ -379,6 +379,185 @@ function requireAdmin(
 
 
 // =====================================================
+// CLASS MANAGEMENT APIs
+// =====================================================
+
+// GET ALL CLASSES
+app.get(
+    "/api/admin/classes",
+    requireAdmin,
+    (req, res) => {
+
+        db.all(
+            `
+            SELECT id, class_name, created_at
+            FROM classes
+            ORDER BY id ASC
+            `,
+            [],
+            (err, rows) => {
+
+                if (err) {
+                    console.error(
+                        "Load classes error:",
+                        err.message
+                    );
+
+                    return res.status(500).json({
+                        success: false,
+                        message: "Class list could not be loaded."
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    classes: rows || []
+                });
+            }
+        );
+    }
+);
+
+// ADD CLASS
+app.post(
+    "/api/admin/classes",
+    requireAdmin,
+    (req, res) => {
+
+        const className =
+            String(req.body.class_name || "").trim();
+
+        if (!className) {
+            return res.status(400).json({
+                success: false,
+                message: "Class name is required."
+            });
+        }
+
+        db.run(
+            `
+            INSERT INTO classes (class_name)
+            VALUES (?)
+            `,
+            [className],
+            function(err) {
+
+                if (err) {
+
+                    if (
+                        err.message &&
+                        err.message.toLowerCase().includes("duplicate")
+                    ) {
+                        return res.status(400).json({
+                            success: false,
+                            message: "This class already exists."
+                        });
+                    }
+
+                    return res.status(500).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+
+                res.json({
+                    success: true,
+                    message: "Class added successfully.",
+                    id: this.lastID
+                });
+            }
+        );
+    }
+);
+
+// DELETE CLASS
+app.delete(
+    "/api/admin/classes/:id",
+    requireAdmin,
+    (req, res) => {
+
+        const id = req.params.id;
+
+        db.get(
+            `
+            SELECT class_name
+            FROM classes
+            WHERE id = ?
+            `,
+            [id],
+            (err, classRow) => {
+
+                if (err) {
+                    return res.status(500).json({
+                        success: false,
+                        message: err.message
+                    });
+                }
+
+                if (!classRow) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "Class not found."
+                    });
+                }
+
+                const className = classRow.class_name;
+
+                db.get(
+                    `
+                    SELECT
+                        (SELECT COUNT(*) FROM students WHERE class_name = ?) +
+                        (SELECT COUNT(*) FROM exams WHERE class_name = ?) +
+                        (SELECT COUNT(*) FROM subjects WHERE class_name = ?) AS used_count
+                    `,
+                    [className, className, className],
+                    (checkErr, usage) => {
+
+                        if (checkErr) {
+                            return res.status(500).json({
+                                success: false,
+                                message: checkErr.message
+                            });
+                        }
+
+                        if (Number(usage?.used_count || 0) > 0) {
+                            return res.status(400).json({
+                                success: false,
+                                message:
+                                    "This class is already used in results, exams or subjects, so it cannot be deleted."
+                            });
+                        }
+
+                        db.run(
+                            `
+                            DELETE FROM classes
+                            WHERE id = ?
+                            `,
+                            [id],
+                            function(deleteErr) {
+
+                                if (deleteErr) {
+                                    return res.status(500).json({
+                                        success: false,
+                                        message: deleteErr.message
+                                    });
+                                }
+
+                                res.json({
+                                    success: true,
+                                    message: "Class deleted successfully."
+                                });
+                            }
+                        );
+                    }
+                );
+            }
+        );
+    }
+);
+
+
+// =====================================================
 // SUBJECT APIs
 // =====================================================
 
