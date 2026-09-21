@@ -1,6 +1,7 @@
 "use strict";
 
 require("dotenv").config();
+const crypto = require("crypto");
 
 const env = process.env;
 const isProduction = env.NODE_ENV === "production";
@@ -55,18 +56,26 @@ const config = {
 
 // Secrets --------------------------------------------------------------
 if (!config.sessionSecret) {
-    if (isProduction) {
-        // Refuse to start: a public default secret would make sessions and QR links forgeable.
+    if (isProduction && config.databaseUrl) {
+        // Render may not have SESSION_SECRET configured yet. Derive a stable secret from
+        // the already-private DATABASE_URL so the app can boot without a hard-coded secret.
+        // A separately configured SESSION_SECRET is still preferred and should be used when available.
+        config.sessionSecret = crypto
+            .createHmac("sha256", "school-result-system-session-secret-v1")
+            .update(config.databaseUrl)
+            .digest("hex");
+        console.warn("WARNING: SESSION_SECRET is not set. Using a stable derived secret from DATABASE_URL. Configure SESSION_SECRET in Render for best practice.");
+    } else if (isProduction) {
         console.error(
-            "\nFATAL: SESSION_SECRET is not set.\n" +
-            "Set a long random value in your hosting environment variables, e.g.:\n" +
-            "  node -e \"console.log(require('crypto').randomBytes(48).toString('hex'))\"\n"
+            "\nFATAL: SESSION_SECRET is not set and DATABASE_URL is unavailable.\n" +
+            "Set SESSION_SECRET in your hosting environment variables.\n"
         );
         process.exit(1);
-    }
-    config.sessionSecret = "dev-only-secret-change-me";
-    if (!isTest) {
-        console.warn("WARNING: SESSION_SECRET is not set. Using a development-only secret.");
+    } else {
+        config.sessionSecret = "dev-only-secret-change-me";
+        if (!isTest) {
+            console.warn("WARNING: SESSION_SECRET is not set. Using a development-only secret.");
+        }
     }
 }
 if (!config.verifySecret) {
