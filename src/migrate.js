@@ -83,6 +83,28 @@ async function migrate() {
             )`);
 
         await client.query(`
+            CREATE TABLE IF NOT EXISTS classes (
+                id SERIAL PRIMARY KEY,
+                class_name TEXT NOT NULL UNIQUE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )`);
+
+        await client.query(`
+            INSERT INTO classes (class_name)
+            SELECT DISTINCT TRIM(class_name)
+            FROM (
+                SELECT class_name FROM students
+                UNION
+                SELECT class_name FROM exams
+                UNION
+                SELECT class_name FROM subjects
+            ) AS existing_classes
+            WHERE class_name IS NOT NULL
+              AND TRIM(class_name) <> ''
+            ON CONFLICT (class_name) DO NOTHING
+        `);
+
+        await client.query(`
             CREATE TABLE IF NOT EXISTS results (
                 id SERIAL PRIMARY KEY,
                 student_id INTEGER NOT NULL,
