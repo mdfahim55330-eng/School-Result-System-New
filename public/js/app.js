@@ -168,6 +168,7 @@
         { group: "Overview", items: [{ href: "/pages/admin.html", label: "Dashboard", icon: "home", key: "dashboard" }] },
         {
             group: "Setup", items: [
+                { href: "/pages/classes.html", label: "Classes", icon: "table", key: "classes" },
                 { href: "/pages/subjects.html", label: "Subjects", icon: "book", key: "subjects" },
                 { href: "/pages/exams.html", label: "Exams", icon: "calendar", key: "exams" }
             ]
@@ -247,6 +248,15 @@
             window.location.href = "/pages/admin-login.html";
         };
         return user;
+    };
+
+    // ---------------------------------------------------------------- dynamic classes
+    App.loadClasses = async function () {
+        const r = await App.api("/api/admin/classes");
+        if (!r.ok) return [];
+        return (r.data.classes || []).map(function (x) {
+            return { value: x.class_name, label: "Class " + x.class_name };
+        });
     };
 
     // ---------------------------------------------------------------- class / exam / year picker
