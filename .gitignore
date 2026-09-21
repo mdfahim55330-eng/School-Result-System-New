@@ -1,5 +1,10 @@
 node_modules/
-result_system.db
-result_system.db-shm
-result_system.db-wal
-uploads/.env.backup
+.env
+.env.*
+!.env.example
+*.db
+*.db-shm
+*.db-wal
+uploads/
+result-backup-*.json
+.DS_Store

@@ -1,217 +1,51 @@
 <!DOCTYPE html>
-
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-    <title>Shaheed Nur Hossain Memorial School</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            background:
-                linear-gradient(135deg,
-                    #e3f2fd,
-                    #f5f7fa);
-        }
-
-        .container {
-            width: 100%;
-            max-width: 520px;
-
-            padding: 50px 35px;
-
-            text-align: center;
-
-            background: white;
-
-            border-radius: 20px;
-
-            box-shadow:
-                0 15px 40px rgba(0, 0, 0, 0.12);
-        }
-
-        .school-icon {
-            width: 100px;
-            height: 100px;
-
-            margin: 0 auto 40px;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-
-            border-radius: 50%;
-
-            background: #f0f2f3;
-
-            color: rgb(247, 14, 14);
-
-            font-size: 45px;
-        }
-
-        .school-name {
-            font-size: 26px;
-            font-weight: bold;
-
-            color: #030305;
-
-            margin-bottom: 10px;
-        }
-
-        .system-name {
-            font-size: 16px;
-
-            color: #666;
-
-            margin-bottom: 35px;
-        }
-
-        .buttons {
-            display: flex;
-
-            flex-direction: column;
-
-            gap: 15px;
-        }
-
-        .btn {
-            width: 100%;
-
-            padding: 15px 20px;
-
-            border: none;
-
-            border-radius: 10px;
-
-            font-size: 17px;
-
-            font-weight: bold;
-
-            cursor: pointer;
-
-            transition: 0.25s;
-
-            text-decoration: none;
-
-            display: block;
-        }
-
-        .search-btn {
-            background: #1976d2;
-            color: white;
-        }
-
-        .search-btn:hover {
-            background: #125ca8;
-
-            transform: translateY(-2px);
-        }
-
-        .admin-btn {
-            background: #424242;
-            color: white;
-        }
-
-        .admin-btn:hover {
-            background: #222;
-
-            transform: translateY(-2px);
-        }
-
-        .footer {
-            margin-top: 30px;
-
-            color: #999;
-
-            font-size: 13px;
-        }
-
-        @media (max-width: 600px) {
-
-            .container {
-                width: 90%;
-
-                padding: 40px 25px;
-            }
-
-            .school-name {
-                font-size: 24px;
-            }
-
-        }
-    </style>
-    
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shaheed Nur Hossain Memorial School - Result Portal</title>
+    <link rel="icon" href="/6716-removebg-preview.png">
+    <link rel="stylesheet" href="/css/app.css">
 </head>
+<body class="min-h-screen bg-gradient-to-br from-brand-950 via-brand-800 to-brand-600">
+    <div class="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-8">
+        <header class="flex items-center gap-3 text-white">
+            <img src="/6716-removebg-preview.png" alt="School logo" class="h-12 w-12 rounded-full bg-white/90 object-contain p-1" onerror="this.style.display='none'">
+            <div>
+                <p class="text-base font-bold leading-tight sm:text-lg">Shaheed Nur Hossain Memorial School</p>
+                <p class="text-xs text-brand-200">Biral, Dinajpur</p>
+            </div>
+        </header>
 
-<body>
+        <main class="flex flex-1 flex-col justify-center py-12">
+            <div class="max-w-2xl text-white">
+                <span class="inline-block rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wide text-brand-100">ONLINE RESULT PORTAL</span>
+                <h1 class="mt-4 text-4xl font-bold leading-tight text-white sm:text-5xl">Find your result in seconds.</h1>
+                <p class="mt-4 text-lg text-brand-100">Enter your roll number, class and exam to see your marks, GPA and merit position, and download an official marksheet.</p>
+            </div>
 
-    
-    <div class="container">
+            <div class="mt-10 grid gap-4 sm:grid-cols-2">
+                <a href="/pages/result-search.html" class="group rounded-2xl bg-white p-6 shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-brand-100 text-brand-700">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/></svg>
+                    </div>
+                    <h2 class="mt-4 text-xl font-bold">Check Result</h2>
+                    <p class="mt-1 text-sm text-slate-500">For students and guardians. No login needed.</p>
+                    <p class="mt-4 text-sm font-semibold text-brand-700 group-hover:underline">Search now &rarr;</p>
+                </a>
+                <a href="/pages/admin-login.html" class="group rounded-2xl bg-white/10 p-6 text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-white/15">
+                    <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-white/15">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.6" stroke="currentColor" class="h-6 w-6"><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z"/></svg>
+                    </div>
+                    <h2 class="mt-4 text-xl font-bold text-white">Staff Login</h2>
+                    <p class="mt-1 text-sm text-brand-100">Teachers and administrators manage results here.</p>
+                    <p class="mt-4 text-sm font-semibold text-white group-hover:underline">Sign in &rarr;</p>
+                </a>
+            </div>
+        </main>
 
-        <!-- SCHOOL ICON -->
-
-        <div class="school-icon">
-            <img id="schoolLogo" class="school-logo" src="/6716-removebg-preview.png" alt="School Logo"
-                style="width: 150px; height: 150px;">
-        </div>
-
-
-        <!-- SCHOOL NAME -->
-
-        <div class="school-name">
-            Shaheed Nur Hossain Memorial School
-        </div>
-
-
-        
-
-
-        <!-- BUTTONS -->
-
-        <div class="buttons">
-
-            <!-- SEARCH RESULT -->
-
-            <a href="/pages/result-search.html" class="btn search-btn">
-                Search Result
-            </a>
-
-
-            <!-- ADMIN LOGIN -->
-
-            <a href="/pages/admin-login.html" class="btn admin-btn">
-                🔐 Admin Login
-            </a>
-
-        </div>
-
-
-        <!-- FOOTER -->
-
-        <div class="footer">
-            © 2026 School Result Management System
-        </div>
-
+        <footer class="text-center text-xs text-brand-200">&copy; <span id="year"></span> Shaheed Nur Hossain Memorial School</footer>
     </div>
-
-
+    <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
-
 </html>

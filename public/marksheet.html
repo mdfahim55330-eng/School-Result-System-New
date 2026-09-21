@@ -1,1060 +1,122 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Academic Marksheet</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            padding: 20px;
-            font-family: Arial, sans-serif;
-            background: #e5e7eb;
-            color: #111827;
-        }
-
-        .marksheet {
-            max-width: 950px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border: 1px solid #111827;
-        }
-
-        /* ==============================
-           SCHOOL HEADER
-        ============================== */
-
-        .school-header {
-            position: relative;
-            text-align: center;
-            border-bottom: 4px solid #111827;
-            padding-bottom: 15px;
-            min-height: 90px;
-        }
-
-        .school-logo {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 85px;
-            height: 85px;
-            object-fit: contain;
-        }
-
-        .school-header h1 {
-            margin: 0;
-            padding-top: 5px;
-            font-size: 20px;
-            text-transform: uppercase;
-        }
-
-        .school-header p {
-            margin: 6px 0;
-            font-size: 16px;
-        }
-
-        /* ==============================
-           TITLE
-        ============================== */
-
-        .title {
-            text-align: center;
-            margin: 10px 0;
-        }
-
-        .title h2 {
-            margin: 0;
-            font-size: 20px;
-        }
-
-        .title p {
-            margin: 5px 0;
-            font-weight: bold;
-        }
-
-        /* ==============================
-           STUDENT INFORMATION
-        ============================== */
-
-        .student-info {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border: 2px solid #111827;
-            margin-bottom: 14px;
-        }
-
-        .info {
-            padding: 8px 14px;
-            border-bottom: 2px solid #111827;
-        }
-
-        .info:nth-child(odd) {
-            border-right: 2px solid #111827;
-        }
-
-        .info strong {
-            display: inline-block;
-            min-width: 120px;
-        }
-
-        /* ==============================
-           RESULT TABLE
-        ============================== */
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 2px solid #111827;
-            padding: 8px;
-            text-align: center;
-        }
-
-        th {
-            background: #e5e7eb;
-            font-size: 16px;
-        }
-
-        td:first-child {
-            text-align: left;
-        }
-
-        /* ==============================
-           SUMMARY
-        ============================== */
-
-        .summary {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            margin-top: 10px;
-        }
-
-        .summary-box {
-            border: 2px solid #09101f;
-            padding: 10px;
-            text-align: center;
-        }
-
-        .summary-box strong {
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .summary-box span {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        /* ==============================
-           FOOTER
-        ============================== */
-
-        .footer {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 80px;
-            text-align: center;
-        }
-
-        .signature-box {
-            width: 200px;
-        }
-
-        .signature-image {
-            display: block;
-            width: 150px;
-            height: 55px;
-            object-fit: contain;
-            margin: 0 auto 5px;
-        }
-
-        .signature-line {
-            border-top: 2px solid #111827;
-            padding-top: 6px;
-        }
-
-        /* ==============================
-           PRINT BUTTON
-        ============================== */
-
-        .print-button {
-            display: block;
-            margin: 30px auto 0;
-            padding: 12px 30px;
-            border: none;
-            background: #1d4ed8;
-            color: white;
-            border-radius: 6px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .print-button:hover {
-            background: #1e40af;
-        }
-
-        /* ==============================
-           ERROR
-        ============================== */
-
-        .error-message {
-            text-align: center;
-            padding: 30px;
-            color: #991b1b;
-            font-weight: bold;
-        }
-
-        /* ==============================
-           PRINT
-        ============================== */
-
-        @page {
-            size: A4;
-            margin: 10mm;
-        }
-        
-        @media print {
-
-            body {
-                background: white;
-                padding: 0;
-            }
-
-            .marksheet {
-                max-width: none;
-                border: none;
-                padding: 15px;
-            }
-
-            .print-button {
-                display: none;
-            }
-
-        }
-
-        /* ==============================
-           MOBILE
-        ============================== */
-
-        @media (max-width: 600px) {
-
-            body {
-                padding: 5px;
-            }
-
-            .marksheet {
-                padding: 15px;
-            }
-
-            .school-logo {
-                width: 65px;
-                height: 65px;
-            }
-
-            .school-header h1 {
-                font-size: 20px;
-                padding-left: 60px;
-                padding-right: 10px;
-            }
-
-            .student-info {
-                grid-template-columns: 1fr;
-            }
-
-            .info:nth-child(odd) {
-                border-right: none;
-            }
-
-            .summary {
-                grid-template-columns: 1fr 1fr;
-            }
-
-            .footer {
-                margin-top: 50px;
-            }
-
-            .signature-box {
-                width: 45%;
-            }
-
-        }
-    </style>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Marksheet</title>
+    <link rel="icon" href="/6716-removebg-preview.png">
+    <link rel="stylesheet" href="/css/app.css">
+    <style>@page { size: A4; margin: 10mm; }</style>
 </head>
-
-
-<body>
-
-    <div class="marksheet">
-
-        <!-- ==============================
-         SCHOOL HEADER
-    ============================== -->
-
-        <div class="school-header">
-
-            <!--
-            IMPORTANT:
-            আপনার logo public folder-এর ভিতরে থাকলে
-            এখানে filename পরিবর্তন করতে পারবেন।
-        -->
-
-            <img id="schoolLogo" class="school-logo" src="/6716-removebg-preview.png" alt="School Logo"
-                onerror="this.style.display='none';">
-
-            <h1 id="schoolName">
-                schoolName
-            </h1>
-
-            <p id="schoolAddress">
-                schoolAddress
-            </p>
-
-            <p id="eiin"></p>
-
+<body class="bg-slate-200 py-6 print:bg-white print:py-0">
+    <div class="no-print mx-auto mb-4 flex max-w-[820px] flex-wrap items-center justify-between gap-2 px-3">
+        <a href="/pages/result-search.html" class="text-sm font-semibold text-brand-700 hover:underline">&larr; Back</a>
+        <div class="flex gap-2">
+            <a id="pdf-btn" href="#" class="btn-secondary hidden">Download PDF</a>
+            <button type="button" class="btn-primary" onclick="window.print()">Print marksheet</button>
         </div>
-
-
-        <!-- ==============================
-         EXAM TITLE
-    ============================== -->
-
-        <div class="title">
-
-            <h2>
-                ACADEMIC MARKSHEET
-            </h2>
-
-            <p id="examTitle">
-                Examination
-            </p>
-
-        </div>
-
-
-        <!-- ==============================
-         STUDENT INFORMATION
-    ============================== -->
-
-        <div class="student-info">
-
-            <div class="info">
-
-                <strong>
-                    Student Name:
-                </strong>
-
-                <span id="studentName">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="info">
-
-                <strong>
-                    Roll:
-                </strong>
-
-                <span id="roll">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="info">
-
-                <strong>
-                    Registration:
-                </strong>
-
-                <span id="registration">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="info">
-
-                <strong>
-                    Class:
-                </strong>
-
-                <span id="className">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="info">
-
-                <strong>
-                    Group:
-                </strong>
-
-                <span id="groupName">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="info">
-
-                <strong>
-                    Year:
-                </strong>
-
-                <span id="examYear">
-                    -
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==============================
-         SUBJECT RESULT
-    ============================== -->
-
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>
-                            Subject
-                        </th>
-
-                        <th>
-                            Code
-                        </th>
-
-                        <th>
-                            Full Marks
-                        </th>
-
-                        <th>
-                            Marks
-                        </th>
-
-                        <th>
-                            Grade
-                        </th>
-
-                        <th>
-                            Grade Point
-                        </th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="resultTable">
-
-                    <tr>
-
-                        <td colspan="6">
-                            Loading result...
-                        </td>
-
-                    </tr>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-        <!-- ==============================
-         SUMMARY
-    ============================== -->
-
-        <div class="summary">
-
-            <div class="summary-box">
-
-                <strong>
-                    Total Marks
-                </strong>
-
-                <span id="totalMarks">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="summary-box">
-
-                <strong>
-                    GPA
-                </strong>
-
-                <span id="gpa">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="summary-box">
-
-                <strong>
-                    Result
-                </strong>
-
-                <span id="result">
-                    -
-                </span>
-
-            </div>
-
-
-            <div class="summary-box">
-
-                <strong>
-                    Position
-                </strong>
-
-                <span id="position">
-                    -
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==============================
-         SIGNATURE
-    ============================== -->
-
-        <div class="footer">
-
-            
-            <div class="signature-box">
-
-                <!--
-                Head Teacher Signature
-
-                public folder-এ
-                head-signature.png
-                রাখলে এটি দেখা যাবে।
-            -->
-
-                <img id="headSignature" class="signature-image" src="/head-signature.png" alt="Head Teacher Signature"
-                    onerror="this.style.display='none';">
-
-                <div class="signature-line">
-                    Head Teacher
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- ==============================
-         PRINT
-    ============================== -->
-
-        <button type="button" class="print-button" onclick="window.print()">
-            Print Marksheet
-        </button>
-
     </div>
 
+    <div id="error" class="mx-auto hidden max-w-[820px] rounded-xl bg-white p-8 text-center text-red-600 shadow"></div>
 
+    <article id="sheet" class="mx-auto hidden max-w-[820px] border-4 border-double border-brand-800 bg-white p-8 shadow-xl print:max-w-none print:shadow-none">
+        <header class="text-center">
+            <img src="/6716-removebg-preview.png" alt="" class="mx-auto h-16 w-16 object-contain" onerror="this.style.display='none'">
+            <h1 id="school-name" class="mt-1 text-2xl font-bold text-brand-800"></h1>
+            <p id="school-address" class="text-sm text-slate-500"></p>
+            <p id="school-eiin" class="text-sm text-slate-500"></p>
+        </header>
+
+        <div class="my-4 border-t border-slate-300 pt-3 text-center">
+            <h2 class="text-lg font-bold tracking-wide">ACADEMIC MARKSHEET</h2>
+            <p id="exam-title" class="text-sm text-slate-600"></p>
+        </div>
+
+        <dl id="info" class="grid grid-cols-2 gap-x-6 gap-y-1.5 text-sm"></dl>
+
+        <div class="mt-5 overflow-hidden rounded border border-slate-400">
+            <table class="w-full text-sm">
+                <thead class="bg-slate-100">
+                    <tr class="text-left">
+                        <th class="border-b border-r border-slate-400 px-3 py-2">Subject</th>
+                        <th class="border-b border-r border-slate-400 px-3 py-2 text-center">Code</th>
+                        <th class="border-b border-r border-slate-400 px-3 py-2 text-center">Full Marks</th>
+                        <th class="border-b border-r border-slate-400 px-3 py-2 text-center">Marks</th>
+                        <th class="border-b border-r border-slate-400 px-3 py-2 text-center">Grade</th>
+                        <th class="border-b border-slate-400 px-3 py-2 text-center">Grade Point</th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
+        </div>
+
+        <div id="summary" class="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4"></div>
+
+        <footer class="mt-10 flex items-end justify-between gap-4">
+            <div class="text-center">
+                <img id="qr" alt="QR code to verify this result" class="h-24 w-24">
+                <p class="mt-1 text-[11px] text-slate-500">Scan to verify this result</p>
+            </div>
+            <div class="w-48 text-center">
+                <img src="/head-signature.png" alt="" class="mx-auto h-14 object-contain" onerror="this.style.display='none'">
+                <div class="border-t border-slate-800 pt-1 text-sm font-bold">Head Teacher</div>
+            </div>
+        </footer>
+        <p class="mt-6 text-center text-[11px] text-slate-400">This is a computer generated marksheet. Its authenticity can be checked by scanning the QR code.</p>
+    </article>
+
+    <script src="/js/app.js"></script>
     <script>
-
-        // ========================================
-        // GET SEARCH PARAMETERS
-        // ========================================
-
-        const searchParams =
-            new URLSearchParams(
-                window.location.search
-            );
-
-        const roll =
-            searchParams.get("roll");
-
-        const className =
-            searchParams.get("class_name");
-
-        const examName =
-            searchParams.get("exam_name");
-
-        const examYear =
-            searchParams.get("exam_year");
-
-
-        // ========================================
-        // LOAD MARKSHEET
-        // ========================================
-
-        async function loadMarksheet() {
-
-            console.log(
-                "Loading marksheet..."
-            );
-
-            console.log(
-                "Roll:",
-                roll
-            );
-
-            console.log(
-                "Class:",
-                className
-            );
-
-            console.log(
-                "Exam:",
-                examName
-            );
-
-            console.log(
-                "Year:",
-                examYear
-            );
-
-
-            // ====================================
-            // CHECK PARAMETERS
-            // ====================================
-
-            if (
-                !roll ||
-                !className ||
-                !examName ||
-                !examYear
-            ) {
-
-                showError(
-                    "Result information is missing."
-                );
-
-                return;
-            }
-
-
-            try {
-
-                // ====================================
-                // API URL
-                // ====================================
-
-                const apiUrl =
-                    "/api/result/search" +
-                    "?roll=" +
-                    encodeURIComponent(roll) +
-                    "&class_name=" +
-                    encodeURIComponent(className) +
-                    "&exam_name=" +
-                    encodeURIComponent(examName) +
-                    "&exam_year=" +
-                    encodeURIComponent(examYear);
-
-
-                console.log(
-                    "Marksheet API URL:",
-                    apiUrl
-                );
-
-
-                // ====================================
-                // FETCH
-                // ====================================
-
-                const response =
-                    await fetch(apiUrl);
-
-
-                console.log(
-                    "Response status:",
-                    response.status
-                );
-
-
-                // ====================================
-                // JSON
-                // ====================================
-
-                const data =
-                    await response.json();
-
-
-                console.log(
-                    "Marksheet result data:",
-                    data
-                );
-
-
-                // ====================================
-                // API ERROR
-                // ====================================
-
-                if (
-                    !response.ok ||
-                    !data.success
-                ) {
-
-                    showError(
-                        data.message ||
-                        "Result not found."
-                    );
-
-                    return;
-                }
-
-
-                // ====================================
-                // DISPLAY
-                // ====================================
-
-                displayMarksheet(data);
-
-            }
-
-            catch (error) {
-
-                console.error(
-                    "Marksheet error:",
-                    error
-                );
-
-
-                showError(
-                    "Could not load result. Please check server and API."
-                );
-
-            }
-
+        const params = new URLSearchParams(window.location.search);
+        function fail(message) {
+            const box = App.$("#error");
+            box.textContent = message;
+            box.classList.remove("hidden");
+        }
+        function info(label, value) {
+            return '<div class="flex gap-2"><dt class="w-28 shrink-0 font-bold text-slate-500">' + App.esc(label) + ':</dt><dd>' + App.esc(value || "-") + "</dd></div>";
+        }
+        function box(label, value, bad) {
+            return '<div class="rounded-lg border border-slate-300 p-2 text-center"><p class="text-[11px] text-slate-500">' + App.esc(label) +
+                '</p><p class="text-lg font-bold ' + (bad ? "text-red-600" : "") + '">' + App.esc(value) + "</p></div>";
         }
 
-
-        // ========================================
-        // DISPLAY MARKSHEET
-        // ========================================
-
-        function displayMarksheet(data) {
-
-            console.log(
-                "Displaying marksheet:",
-                data
-            );
-
-
-            const student =
-                data.student || {};
-
-
-            const subjects =
-                Array.isArray(data.subjects)
-                    ? data.subjects
-                    : [];
-
-
-            const summary =
-                data.summary || {};
-
-
-            // ====================================
-            // SCHOOL
-            // ====================================
-
-            const schoolName =
-                student.institute_name ||
-                "School Name";
-
-
-            document.getElementById(
-                "schoolName"
-            ).textContent =
-                "Shaheed Nur Hossain Memorial School";
-
-
-            document.getElementById(
-                "schoolAddress"
-            ).textContent =
-                "Biral, Dinajpur";
-
-
-            if (student.eiin) {
-
-                document.getElementById(
-                    "eiin"
-                ).textContent =
-                    "EIIN: " +
-                    student.eiin;
-
+        async function load() {
+            if (!params.get("roll") || !params.get("class_name") || !params.get("exam_name") || !params.get("exam_year")) {
+                return fail("Result information is missing.");
             }
-            else {
+            const q = "roll=" + encodeURIComponent(params.get("roll")) + "&class_name=" + encodeURIComponent(params.get("class_name")) +
+                "&exam_name=" + encodeURIComponent(params.get("exam_name")) + "&exam_year=" + encodeURIComponent(params.get("exam_year"));
+            const r = await App.api("/api/result/search?" + q, { noRedirect: true });
+            if (!r.ok) return fail(r.data.message || "Result not found.");
 
-                document.getElementById(
-                    "eiin"
-                ).textContent =
-                    "";
-
-            }
-
-
-            // ====================================
-            // STUDENT
-            // ====================================
-
-            document.getElementById(
-                "studentName"
-            ).textContent =
-                student.name || "-";
-
-
-            document.getElementById(
-                "roll"
-            ).textContent =
-                student.roll || "-";
-
-
-            document.getElementById(
-                "registration"
-            ).textContent =
-                student.registration || "-";
-
-
-            document.getElementById(
-                "className"
-            ).textContent =
-                student.class_name || "-";
-
-
-            document.getElementById(
-                "groupName"
-            ).textContent =
-                student.group_name || "-";
-
-
-            document.getElementById(
-                "examYear"
-            ).textContent =
-                student.exam_year || "-";
-
-
-            document.getElementById(
-                "examTitle"
-            ).textContent =
-                student.exam_name ||
-                "Examination";
-
-
-            // ====================================
-            // SUBJECT TABLE
-            // ====================================
-
-            const table =
-                document.getElementById(
-                    "resultTable"
-                );
-
-
-            table.innerHTML = "";
-
-
-            if (subjects.length === 0) {
-
-                table.innerHTML = `
-            <tr>
-                <td colspan="6">
-                    No subject result found.
-                </td>
-            </tr>
-        `;
-
-            }
-            else {
-
-                subjects.forEach(
-                    function (subject) {
-
-                        const row =
-                            document.createElement(
-                                "tr"
-                            );
-
-
-                        const gradePoint =
-                            Number(
-                                subject.grade_point || 0
-                            );
-
-
-                        row.innerHTML = `
-
-                    <td>
-                        ${subject.subject_name ||
-                            "-"
-                            }
-                    </td>
-
-                    <td>
-                        ${subject.subject_code ||
-                            "-"
-                            }
-                    </td>
-
-                    <td>
-                        ${subject.full_marks ??
-                            "-"
-                            }
-                    </td>
-
-                    <td>
-                        ${subject.marks ??
-                            "-"
-                            }
-                    </td>
-
-                    <td>
-                        ${subject.grade ||
-                            "-"
-                            }
-                    </td>
-
-                    <td>
-                        ${gradePoint.toFixed(2)
-                            }
-                    </td>
-
-                `;
-
-
-                        table.appendChild(
-                            row
-                        );
-
-                    }
-                );
-
-            }
-
-
-            // ====================================
-            // SUMMARY
-            // ====================================
-
-            const totalMarks =
-                summary.total_marks ?? 0;
-
-
-            const totalFullMarks =
-                summary.total_full_marks ?? 0;
-
-
-            document.getElementById(
-                "totalMarks"
-            ).textContent =
-                totalMarks +
-                " / " +
-                totalFullMarks;
-
-
-            document.getElementById(
-                "gpa"
-            ).textContent =
-                Number(
-                    summary.gpa || 0
-                ).toFixed(2);
-
-
-            document.getElementById(
-                "result"
-            ).textContent =
-                summary.result || "-";
-
-
-            document.getElementById(
-                "position"
-            ).textContent =
-                summary.position ?? "-";
-
+            const d = r.data, s = d.student, m = d.summary;
+            const school = d.school || App.SCHOOL;
+            document.title = "Marksheet - " + s.name;
+            App.$("#school-name").textContent = school.name;
+            App.$("#school-address").textContent = school.address || "";
+            App.$("#school-eiin").textContent = s.eiin ? "EIIN: " + s.eiin : "";
+            App.$("#exam-title").textContent = s.exam_name + " - " + s.exam_year;
+            App.$("#info").innerHTML = info("Student Name", s.name) + info("Roll", s.roll) + info("Registration", s.registration) +
+                info("Class", s.class_name) + info("Group", s.group_name) + info("Year", s.exam_year);
+            App.$("#rows").innerHTML = d.subjects.map(function (x) {
+                return "<tr><td class=\"border-b border-r border-slate-300 px-3 py-1.5\">" + App.esc(x.subject_name) + "</td>" +
+                    '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.subject_code) + "</td>" +
+                    '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.full_marks) + "</td>" +
+                    '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.marks) + "</td>" +
+                    '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.grade) + "</td>" +
+                    '<td class="border-b border-slate-300 px-3 py-1.5 text-center">' + Number(x.grade_point).toFixed(2) + "</td></tr>";
+            }).join("");
+            const failed = String(m.result).toLowerCase() === "fail";
+            App.$("#summary").innerHTML = box("Total Marks", m.total_marks + " / " + m.total_full_marks) + box("GPA", Number(m.gpa).toFixed(2), failed) +
+                box("Result", m.result, failed) + box("Position", m.position);
+            App.$("#qr").src = d.qr;
+            const pdf = App.$("#pdf-btn");
+            pdf.href = "/api/result/marksheet.pdf?" + q;
+            pdf.classList.remove("hidden");
+            App.$("#sheet").classList.remove("hidden");
         }
-
-
-        // ========================================
-        // ERROR MESSAGE
-        // ========================================
-
-        function showError(message) {
-
-            const table =
-                document.getElementById(
-                    "resultTable"
-                );
-
-
-            table.innerHTML = `
-
-        <tr>
-
-            <td
-                colspan="6"
-                class="error-message"
-            >
-
-                ${message}
-
-            </td>
-
-        </tr>
-
-    `;
-
-        }
-
-
-        // ========================================
-        // START
-        // ========================================
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            function () {
-
-                loadMarksheet();
-
-            }
-        );
-
+        load();
     </script>
-
 </body>
-
 </html>

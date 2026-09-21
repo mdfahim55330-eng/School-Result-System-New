@@ -1,0 +1,68 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: "Hind Siliguri";
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/HindSiliguri-Regular.woff2") format("woff2");
+}
+@font-face {
+    font-family: "Hind Siliguri";
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+    src: url("/fonts/HindSiliguri-Bold.woff2") format("woff2");
+}
+
+@layer base {
+    html { -webkit-text-size-adjust: 100%; }
+    body { @apply bg-slate-50 font-sans text-slate-800 antialiased; }
+    h1, h2, h3 { @apply font-bold text-slate-900; }
+    [x-cloak], .hidden-init { display: none; }
+}
+
+@layer components {
+    .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-400 focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50; }
+    .btn-primary { @apply btn bg-brand-700 text-white hover:bg-brand-800; }
+    .btn-secondary { @apply btn border border-slate-300 bg-white text-slate-700 hover:bg-slate-50; }
+    .btn-success { @apply btn bg-emerald-600 text-white hover:bg-emerald-700; }
+    .btn-danger { @apply btn bg-red-600 text-white hover:bg-red-700; }
+    .btn-warn { @apply btn bg-amber-500 text-white hover:bg-amber-600; }
+    .btn-sm { @apply px-3 py-1.5 text-xs; }
+
+    .card { @apply rounded-2xl bg-white p-5 shadow-soft ring-1 ring-slate-200/70; }
+    .card-title { @apply mb-4 text-base font-bold text-slate-900; }
+
+    .label { @apply mb-1 block text-xs font-semibold uppercase tracking-wide text-slate-500; }
+    .input { @apply block w-full rounded-lg border-slate-300 bg-white text-sm text-slate-900 shadow-sm placeholder:text-slate-400 focus:border-brand-500 focus:ring-brand-500 disabled:bg-slate-100; }
+
+    .table-wrap { @apply overflow-x-auto rounded-xl ring-1 ring-slate-200; }
+    .table { @apply min-w-full divide-y divide-slate-200 text-sm; }
+    .table thead { @apply bg-slate-50; }
+    .table th { @apply whitespace-nowrap px-3 py-2.5 text-left text-xs font-bold uppercase tracking-wide text-slate-500; }
+    .table td { @apply px-3 py-2.5 text-slate-700; }
+    .table tbody { @apply divide-y divide-slate-100 bg-white; }
+    .table tbody tr:hover { @apply bg-slate-50/70; }
+
+    .badge { @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+    .badge-green { @apply badge bg-emerald-100 text-emerald-700; }
+    .badge-amber { @apply badge bg-amber-100 text-amber-700; }
+    .badge-red { @apply badge bg-red-100 text-red-700; }
+    .badge-blue { @apply badge bg-brand-100 text-brand-700; }
+    .badge-gray { @apply badge bg-slate-100 text-slate-600; }
+
+    .nav-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-brand-100 transition hover:bg-white/10 hover:text-white; }
+    .nav-link-active { @apply bg-white/15 text-white; }
+}
+
+/* ---------- printing (marksheet, merit list, tabulation sheet) ---------- */
+@media print {
+    body { background: #fff !important; }
+    .no-print { display: none !important; }
+    .print-only { display: block !important; }
+    .card { box-shadow: none !important; ring-width: 0; border: 0; padding: 0; }
+}
+.print-only { display: none; }
