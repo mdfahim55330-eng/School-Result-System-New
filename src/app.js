@@ -18,6 +18,7 @@ const PUBLIC_DIR = path.join(__dirname, "..", "public");
 // Pages that only logged-in staff may open (the server redirects everybody else to the login page)
 const STAFF_PAGES = {
     "admin": "any",
+    "classes": "any",
     "subjects": "any",
     "exams": "any",
     "individual-result": "any",
@@ -26,6 +27,7 @@ const STAFF_PAGES = {
     "merit-list": "any",
     "tabulation": "any",
     "statistics": "any",
+    "marksheet-management": "any",
     "users": "admin"
 };
 
