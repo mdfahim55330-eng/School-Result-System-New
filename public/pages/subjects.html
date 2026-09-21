@@ -41,7 +41,7 @@
 <script src="/js/app.js"></script>
 <script>
     let subjects = [], isAdmin = false;
-    const CLASS_ITEMS = App.CLASS_ORDER.map(function (c) { return { value: c, label: "Class " + c }; });
+    let CLASS_ITEMS = [];
 
     function render() {
         const f = App.$("#filter").value;
@@ -74,6 +74,7 @@
         const user = await App.shell("subjects");
         if (!user) return;
         isAdmin = user.role === "admin";
+        CLASS_ITEMS = await App.loadClasses();
         App.fillSelect(App.$("#class_name"), CLASS_ITEMS, "Select");
         App.fillSelect(App.$("#filter"), CLASS_ITEMS, "All classes");
         if (isAdmin) App.$("#add-card").classList.remove("hidden"); else App.$("#act-h").textContent = "";
