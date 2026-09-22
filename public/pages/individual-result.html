@@ -162,7 +162,7 @@
         if (!user) return;
         const [ex, sb] = await Promise.all([App.api("/api/admin/exams"), App.api("/api/admin/subjects")]);
         exams = ex.ok ? ex.data.exams : []; allSubjects = sb.ok ? sb.data.subjects : [];
-        App.fillSelect(App.$("#exam"), exams.map(function (e) { return { value: e.id, label: e.exam_name + " - Class " + e.class_name + " - " + e.exam_year }; }), "Select exam");
+        App.fillSelect(App.$("#exam"), exams.map(function (e) { return { value: e.id, label: e.exam_name + " - " + e.class_name + " - " + e.exam_year }; }), "Select exam");
         App.$("#exam").onchange = pickExam;
         App.$("#subjects").addEventListener("input", update);
         App.$("#save").onclick = save;
@@ -189,7 +189,7 @@
             App.$("#name").value = s.name || ""; App.$("#roll").value = s.roll || ""; App.$("#registration").value = s.registration || "";
             App.$("#group").value = s.group_name || "";
             const note = App.$("#exam-note");
-            note.textContent = s.exam_name + " " + s.exam_year + " - Class " + s.class_name + " (the exam of an existing result cannot be changed)";
+            note.textContent = s.exam_name + " " + s.exam_year + " - " + s.class_name + " (the exam of an existing result cannot be changed)";
             note.classList.remove("hidden");
             const match = exams.filter(function (e) { return e.exam_name === s.exam_name && String(e.exam_year) === String(s.exam_year) && e.class_name === s.class_name; })[0];
             if (match) App.$("#exam").value = match.id;
