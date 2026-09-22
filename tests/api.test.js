@@ -4,6 +4,7 @@ const { test, before, after } = require("node:test");
 const assert = require("node:assert/strict");
 const ExcelJS = require("exceljs");
 const { startServer, client } = require("./helpers");
+const { assignPositions } = require("../src/services/reports");
 
 let srv, admin, teacher, anon;
 const ids = {};
@@ -30,6 +31,26 @@ function upload(buffer, fields) {
 }
 
 // ---------------------------------------------------------------------------
+test("position ranking uses dense positions for equal total marks", () => {
+    const students = [
+        { id: 1, result_status: "Pass", merit_marks: 100, final_gpa: 5 },
+        { id: 2, result_status: "Pass", merit_marks: 100, final_gpa: 5 },
+        { id: 3, result_status: "Pass", merit_marks: 90, final_gpa: 4.8 },
+        { id: 4, result_status: "Pass", merit_marks: 80, final_gpa: 4.5 },
+        { id: 5, result_status: "Pass", merit_marks: 80, final_gpa: 4.5 },
+        { id: 6, result_status: "Pass", merit_marks: 70, final_gpa: 4.0 },
+        { id: 7, result_status: "Fail", merit_marks: 110, final_gpa: 0 }
+    ];
+
+    assignPositions(students, "marks");
+
+    assert.deepEqual(
+        students.filter((s) => s.position !== null).map((s) => s.position),
+        [1, 1, 2, 3, 3, 4]
+    );
+    assert.equal(students[6].position, null);
+});
+
 test("login, roles and forced password change", async () => {
     assert.equal((await anon.get("/api/admin/subjects")).status, 401);
     assert.equal((await anon.post("/api/admin/login", { username: "admin", password: "wrong-password" })).status, 401);
