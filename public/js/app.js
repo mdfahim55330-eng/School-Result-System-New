@@ -255,7 +255,7 @@
         const r = await App.api("/api/admin/classes");
         if (!r.ok) return [];
         return (r.data.classes || []).map(function (x) {
-            return { value: x.class_name, label: "Class " + x.class_name };
+            return { value: x.class_name, label: x.class_name };
         });
     };
 
@@ -281,7 +281,7 @@
         const year = container.querySelector("#sp-year");
 
         const classes = Array.from(new Set(all.map(function (o) { return o.class_name; }))).sort(App.classSort);
-        App.fillSelect(cls, classes.map(function (c) { return { value: c, label: "Class " + c }; }), "Select class");
+        App.fillSelect(cls, classes.map(function (c) { return { value: c, label: c }; }), "Select class");
 
         function refreshExams(keep) {
             const names = Array.from(new Set(all.filter(function (o) { return o.class_name === cls.value; }).map(function (o) { return o.exam_name; })));
