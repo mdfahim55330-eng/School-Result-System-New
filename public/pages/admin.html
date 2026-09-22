@@ -66,7 +66,7 @@
 
         const rows = (options.data.options || []).map(function (o) {
             const q = App.scopeQuery(o);
-            return "<tr><td>Class " + App.esc(o.class_name) + '</td><td class="font-medium text-slate-900">' + App.esc(o.exam_name) + "</td><td>" + App.esc(o.exam_year) +
+            return "<tr><td>" + App.esc(o.class_name) + '</td><td class="font-medium text-slate-900">' + App.esc(o.exam_name) + "</td><td>" + App.esc(o.exam_year) +
                 '</td><td class="text-center">' + o.students + '</td><td class="text-center">' +
                 (o.published === o.students ? '<span class="badge-green">' + o.published + "</span>" : '<span class="badge-amber">' + o.published + " / " + o.students + "</span>") +
                 '</td><td class="text-right whitespace-nowrap"><a class="text-brand-700 hover:underline" href="/pages/result-list.html?' + q + '">Results</a> &middot; ' +
