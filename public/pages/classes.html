@@ -61,7 +61,7 @@
 
         App.$("#rows").innerHTML = classes.map(function (item) {
             return '<tr>' +
-                '<td class="font-medium text-slate-900">Class ' + App.esc(item.class_name) + '</td>' +
+                '<td class="font-medium text-slate-900">' + App.esc(item.class_name) + '</td>' +
                 '<td class="text-right">' +
                 (isAdmin
                     ? '<button class="btn-danger btn-sm" data-del="' + App.esc(item.id) + '">Delete</button>'
