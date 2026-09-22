@@ -76,7 +76,7 @@
 
     function renderSubjects(saved) {
         const body = App.$("#subjects");
-        if (!classSubjects.length) { body.innerHTML = App.emptyRow(6, currentClass ? "No subjects found for Class " + currentClass + "." : "Select an exam first."); update(); return; }
+        if (!classSubjects.length) { body.innerHTML = App.emptyRow(6, currentClass ? "No subjects found for " + currentClass + "." : "Select an exam first."); update(); return; }
         body.innerHTML = classSubjects.map(function (s) {
             const value = saved && saved[s.id] !== undefined ? saved[s.id] : "";
             return "<tr><td class=\"font-medium text-slate-900\">" + App.esc(s.subject_name) + (isFourth(s) ? ' <span class="badge-amber ml-1">4th</span>' : "") + "</td><td>" + App.esc(s.subject_code) +
