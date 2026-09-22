@@ -98,7 +98,7 @@
         const bulk = App.$("#bulk");
         if (scope) {
             const q = App.scopeQuery(scope);
-            App.$("#bulk-title").textContent = "Class " + scope.class_name + " - " + scope.exam_name + " " + scope.exam_year;
+            App.$("#bulk-title").textContent = scope.class_name + " - " + scope.exam_name + " " + scope.exam_year;
             const link = function (id, url) { const el = App.$(id); if (el) el.href = url; };   // admin-only links do not exist for teachers
             link("#l-merit", "/pages/merit-list.html?" + q); link("#l-tab", "/pages/tabulation.html?" + q); link("#l-stat", "/pages/statistics.html?" + q);
             link("#l-pdf", "/api/admin/reports/marksheets.pdf?" + q); link("#l-csv", "/api/admin/export/results.csv?" + q); link("#l-xlsx", "/api/admin/export/results.xlsx?" + q);
@@ -121,7 +121,7 @@
         const wrap = document.createElement("div");
         wrap.className = "no-print fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/50 p-4";
         wrap.innerHTML = '<div class="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"><div class="flex items-start justify-between gap-3"><div><h3 class="text-lg font-bold">' + App.esc(s.name) +
-            '</h3><p class="text-sm text-slate-500">Roll ' + App.esc(s.roll) + " - Class " + App.esc(s.class_name) + " - " + App.esc(s.exam_name) + " " + App.esc(s.exam_year) + "</p></div>" +
+            '</h3><p class="text-sm text-slate-500">Roll ' + App.esc(s.roll) + " - " + App.esc(s.class_name) + " - " + App.esc(s.exam_name) + " " + App.esc(s.exam_year) + "</p></div>" +
             '<button class="rounded-lg p-1 text-slate-400 hover:bg-slate-100" data-close>' + App.icon("x") + '</button></div><div class="mt-4 flex gap-2">' + App.statusBadge(s.status) + App.resultBadge(s.result_status) +
             '<span class="badge-blue">GPA ' + App.fmtGpa(s.final_gpa) + "</span></div>" +
             '<div class="table-wrap mt-4"><table class="table"><thead><tr><th>Subject</th><th class="text-center">Full</th><th class="text-center">Marks</th><th class="text-center">Grade</th></tr></thead><tbody>' +
