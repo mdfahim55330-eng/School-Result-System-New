@@ -48,7 +48,7 @@
         const list = subjects.filter(function (s) { return !f || s.class_name === f; })
             .sort(function (a, b) { return App.classSort(a.class_name, b.class_name) || String(a.subject_code).localeCompare(String(b.subject_code), undefined, { numeric: true }); });
         App.$("#rows").innerHTML = list.map(function (s) {
-            return "<tr><td>Class " + App.esc(s.class_name) + '</td><td class="font-medium text-slate-900">' + App.esc(s.subject_name) + "</td><td>" + App.esc(s.subject_code) +
+            return "<tr><td>" + App.esc(s.class_name) + '</td><td class="font-medium text-slate-900">' + App.esc(s.subject_name) + "</td><td>" + App.esc(s.subject_code) +
                 '</td><td class="text-center">' + App.esc(s.full_marks) + "</td><td>" +
                 (String(s.subject_type).toLowerCase() === "fourth" ? '<span class="badge-amber">4th</span>' : '<span class="badge-gray">Main</span>') + "</td>" +
                 '<td class="text-right">' + (isAdmin ? '<button class="btn-danger btn-sm" data-del="' + s.id + '">Delete</button>' : "") + "</td></tr>";
