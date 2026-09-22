@@ -87,6 +87,7 @@ function createApp() {
         index: "index.html",
         setHeaders(res, file) {
             if (/\.(html)$/i.test(file)) res.setHeader("Cache-Control", "no-cache");
+            else if (/6716-removebg-preview\.png$/i.test(file)) res.setHeader("Cache-Control", "no-cache");
             else res.setHeader("Cache-Control", "public, max-age=3600");
         }
     }));
