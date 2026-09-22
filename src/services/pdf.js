@@ -7,7 +7,7 @@ const PDFDocument = require("pdfkit");
 const ROOT = path.join(__dirname, "..", "..");
 const FONT_REGULAR = path.join(ROOT, "assets", "fonts", "HindSiliguri-Regular.ttf");
 const FONT_BOLD = path.join(ROOT, "assets", "fonts", "HindSiliguri-Bold.ttf");
-const LOGO = path.join(ROOT, "public", "6716-removebg-preview.png");
+const LOGO = path.join(ROOT, "public", "school-logo.jpg");
 const SIGNATURE = path.join(ROOT, "public", "head-signature.png");
 
 const COLORS = { ink: "#111827", muted: "#4b5563", line: "#9ca3af", head: "#e5e7eb", brand: "#1e3a8a" };
