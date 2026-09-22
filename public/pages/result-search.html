@@ -99,7 +99,7 @@
             const r = await App.api("/api/result/options", { noRedirect: true });
             options = r.ok ? r.data.options : [];
             const classes = uniq(options.map(function (o) { return o.class_name; })).sort(App.classSort);
-            App.fillSelect(cls, classes.map(function (c) { return { value: c, label: "Class " + c }; }), "Select class");
+            App.fillSelect(cls, classes.map(function (c) { return { value: c, label: c }; }), "Select class");
             if (r.ok && options.length === 0) setMessage("No results have been published yet. Please check back later.", "error");
         }
         cls.onchange = function () {
@@ -128,7 +128,7 @@
         function show(data) {
             const s = data.student, m = data.summary;
             const failed = String(m.result).toLowerCase() === "fail";
-            App.$("#exam-line").textContent = s.exam_name + " " + s.exam_year + " - Class " + s.class_name;
+            App.$("#exam-line").textContent = s.exam_name + " " + s.exam_year + " - " + s.class_name;
             App.$("#student-name").textContent = s.name;
             App.$("#result-badge").innerHTML = failed ? '<span class="badge-red !px-4 !py-1.5 !text-sm">Fail</span>' : '<span class="badge-green !px-4 !py-1.5 !text-sm">Passed</span>';
             App.$("#student-info").innerHTML = info("Roll", s.roll) + info("Registration", s.registration) + info("Group", s.group_name);
