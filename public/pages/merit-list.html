@@ -44,7 +44,7 @@
         const r = await App.api("/api/admin/reports/merit?" + App.scopeQuery(scope));
         if (!r.ok) return App.toast(r.data.message || "Could not load.", "error");
         App.$("#school").textContent = App.SCHOOL.name;
-        App.$("#title").textContent = "Merit List - Class " + scope.class_name + " - " + scope.exam_name + " " + scope.exam_year;
+        App.$("#title").textContent = "Merit List - " + scope.class_name + " - " + scope.exam_name + " " + scope.exam_year;
         App.$("#rows").innerHTML = r.data.students.map(function (s) {
             return '<tr><td class="text-center">' + medal(s.position) + "</td><td>" + App.esc(s.roll) + '</td><td class="font-medium text-slate-900">' + App.esc(s.name) +
                 '</td><td class="text-center">' + s.total_marks + '</td><td class="text-center font-semibold">' + App.fmtGpa(s.final_gpa) + '</td><td class="text-center">' + App.esc(s.final_grade) +
