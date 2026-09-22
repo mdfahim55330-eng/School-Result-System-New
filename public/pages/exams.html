@@ -37,7 +37,7 @@
         const r = await App.api("/api/admin/exams");
         const list = r.ok ? r.data.exams : [];
         App.$("#rows").innerHTML = list.map(function (x) {
-            return '<tr><td class="font-medium text-slate-900">' + App.esc(x.exam_name) + "</td><td>Class " + App.esc(x.class_name) + "</td><td>" + App.esc(x.exam_year) + '</td><td class="text-right">' +
+            return '<tr><td class="font-medium text-slate-900">' + App.esc(x.exam_name) + "</td><td>" + App.esc(x.class_name) + "</td><td>" + App.esc(x.exam_year) + '</td><td class="text-right">' +
                 (isAdmin ? '<button class="btn-danger btn-sm" data-del="' + x.id + '">Delete</button>' : "") + "</td></tr>";
         }).join("") || App.emptyRow(4, "No exams yet.");
     }
