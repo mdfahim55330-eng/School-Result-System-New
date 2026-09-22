@@ -139,7 +139,7 @@
         isAdmin = user.role === "admin";
         if (!isAdmin) { App.$("#publish").innerHTML = '<option value="false">Save as draft (an admin publishes later)</option>'; App.$("#publish").disabled = true; }
         const r = await App.api("/api/admin/exams");
-        App.fillSelect($exam, (r.ok ? r.data.exams : []).map(function (e) { return { value: e.id, label: e.exam_name + " - Class " + e.class_name + " - " + e.exam_year }; }), "Select exam");
+        App.fillSelect($exam, (r.ok ? r.data.exams : []).map(function (e) { return { value: e.id, label: e.exam_name + " - " + e.class_name + " - " + e.exam_year }; }), "Select exam");
         $exam.onchange = function () { App.$("#preview").classList.add("hidden"); ready(); };
         App.$("#file").onchange = function () { setFile(this.files[0] || null); };
         const drop = App.$("#drop");
