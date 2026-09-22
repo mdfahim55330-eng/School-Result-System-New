@@ -14,13 +14,13 @@ function usesFourthSubjectRule(className) {
 /**
  * Give every student a position.
  *  mode "gpa"   : students who PASSED are ranked by GPA, then by merit marks. Failed students get no position.
- *  mode "marks" : everybody is ranked by merit marks only (the old behaviour).
+ *  mode "marks" : PASSED students are ranked by merit marks only. Failed students get no position.
  * Equal GPA + equal marks share the same position (1, 1, 3 ...).
  * Each student needs: final_gpa, result_status, merit_marks.
  */
 function assignPositions(students, mode = config.meritMode) {
     const ranked = students
-        .filter((s) => (mode === "marks" ? true : s.result_status === "Pass"))
+        .filter((s) => s.result_status === "Pass")
         .slice()
         .sort((a, b) => {
             if (mode === "gpa") {
