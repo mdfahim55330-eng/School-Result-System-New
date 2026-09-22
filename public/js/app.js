@@ -215,7 +215,7 @@
             '<div id="nav-overlay" class="no-print fixed inset-0 z-30 hidden bg-slate-900/50 lg:hidden"></div>' +
             '<aside id="sidebar" class="no-print fixed inset-y-0 left-0 z-40 flex w-64 -translate-x-full flex-col bg-brand-900 transition-transform duration-200 lg:sticky lg:top-0 lg:h-screen lg:translate-x-0">' +
             '<div class="flex items-center gap-3 border-b border-white/10 px-4 py-4">' +
-            '<img src="/6716-removebg-preview.png?v=3" alt="" class="h-12 w-12 rounded-full bg-white/90 object-contain p-1" onerror="this.style.display=\'none\'">' +
+            '<img src="/6716-removebg-preview.png?v=3" alt="" class="h-12 w-12 rounded-full bg-white/90 object-contain p-0" onerror="this.style.display=\'none\'">' +
             '<div class="min-w-0"><p class="truncate text-sm font-bold leading-tight text-white">' + App.esc(App.SCHOOL.name) + '</p>' +
             '<p class="text-[11px] text-brand-200">Result Management</p></div></div>' +
             '<nav class="flex-1 overflow-y-auto px-3 pb-4">' + nav + "</nav>" +
