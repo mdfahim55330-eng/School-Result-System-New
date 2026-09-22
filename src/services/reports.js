@@ -36,9 +36,13 @@ function assignPositions(students, mode = config.meritMode) {
     let position = 0;
     let previous = null;
 
-    ranked.forEach((student, index) => {
+    ranked.forEach((student) => {
         const key = `${mode === "gpa" ? round2(student.final_gpa) : ""}|${round2(student.merit_marks)}`;
-        if (previous === null || key !== previous) position = index + 1;
+        if (previous === null) {
+            position = 1;
+        } else if (key !== previous) {
+            position += 1;
+        }
         previous = key;
         positions.set(student.id, position);
     });
