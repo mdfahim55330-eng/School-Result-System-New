@@ -6,7 +6,40 @@
     <title>Marksheet</title>
     <link rel="icon" href="/6716-removebg-preview.png?v=3">
     <link rel="stylesheet" href="/css/app.css">
-    <style>@page { size: A4; margin: 10mm; }</style>
+    <style>
+        @page { size: A4; margin: 10mm; }
+        #sheet table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+            border: 1px solid #cbd5e1;
+        }
+        #sheet th,
+        #sheet td {
+            padding: 0.45rem 0.55rem;
+            line-height: 1.2;
+            vertical-align: middle;
+        }
+        #sheet th {
+            font-size: 12px;
+            letter-spacing: 0.02em;
+        }
+        #sheet td {
+            font-size: 12px;
+        }
+        #sheet th:nth-child(1),
+        #sheet td:nth-child(1) { width: 30%; }
+        #sheet th:nth-child(2),
+        #sheet td:nth-child(2) { width: 12%; }
+        #sheet th:nth-child(3),
+        #sheet td:nth-child(3) { width: 14%; }
+        #sheet th:nth-child(4),
+        #sheet td:nth-child(4) { width: 14%; }
+        #sheet th:nth-child(5),
+        #sheet td:nth-child(5) { width: 12%; }
+        #sheet th:nth-child(6),
+        #sheet td:nth-child(6) { width: 18%; }
+    </style>
 </head>
 <body class="bg-slate-200 py-6 print:bg-white print:py-0">
     <div class="no-print mx-auto mb-4 flex max-w-[820px] flex-wrap items-center justify-between gap-2 px-3">

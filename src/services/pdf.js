@@ -137,18 +137,18 @@ function drawMarksheet(doc, data, extra = {}) {
     const scale = innerW / tableW;
     cols.forEach((c) => { c.w *= scale; });
 
-    const rowH = 21;
+    const rowH = 18;
     const drawRow = (cells, opts = {}) => {
         let x = M;
         if (opts.fill) doc.rect(M, y, innerW, rowH).fill(opts.fill);
-        doc.fillColor(COLORS.ink).font(opts.bold ? "bold" : "body").fontSize(10.5);
+        doc.fillColor(COLORS.ink).font(opts.bold ? "bold" : "body").fontSize(10.2);
         cols.forEach((c, i) => {
-            doc.text(fit(doc, cells[i], c.w - 12), x + 6, y + 5, {
+            doc.text(fit(doc, cells[i], c.w - 12), x + 6, y + 4, {
                 width: c.w - 10, align: c.align, lineBreak: false
             });
             x += c.w;
         });
-        doc.lineWidth(2).strokeColor(COLORS.line).rect(M, y, innerW, rowH).stroke();
+        doc.lineWidth(1.2).strokeColor(COLORS.line).rect(M, y, innerW, rowH).stroke();
         let vx = M;
         cols.slice(0, -1).forEach((c) => {
             vx += c.w;
