@@ -89,6 +89,27 @@
             body.print-fit #sheet {
                 transform: scale(var(--print-scale, 1)) !important;
             }
+
+            /* Only compact the layout when the marksheet is too long for one A4 page. */
+            body.print-compact #sheet > .my-4 {
+                margin-top: 6px !important;
+                margin-bottom: 6px !important;
+            }
+            body.print-compact #sheet > #info {
+                row-gap: 2px !important;
+            }
+            body.print-compact #sheet > .mt-5 {
+                margin-top: 6px !important;
+            }
+            body.print-compact #sheet > #summary {
+                margin-top: 6px !important;
+            }
+            body.print-compact #sheet > footer {
+                margin-top: 6px !important;
+            }
+            body.print-compact #sheet > p.mt-6 {
+                margin-top: 4px !important;
+            }
             #sheet th,
             #sheet td {
                 padding: 0.3rem 0.38rem;
@@ -223,39 +244,53 @@
             const availableHeight = pageHeight - (border * 2);
             const availableWidth = pageWidth - (border * 2);
 
-            // First measure the real content without forcing a scale.
-            const originalHeight = sheet.getBoundingClientRect().height;
-            sheet.style.height = "auto";
-            sheet.style.minHeight = "0";
+            // Short marksheet: keep all sections in their normal positions.
+            // Only move QR/signature to the bottom of the A4 page.
+            sheet.style.height = "297mm";
+            sheet.style.minHeight = "297mm";
             sheet.style.justifyContent = "flex-start";
 
+            const footer = sheet.querySelector("footer");
+            if (footer) {
+                footer.style.marginTop = "auto";
+            }
+
+            // Measure the real content height.
+            sheet.style.setProperty("--print-scale", "1");
+            document.body.classList.add("print-fit");
             const contentHeight = sheet.scrollHeight;
             const contentWidth = sheet.scrollWidth;
 
-            // If the marksheet is larger than one A4 page, shrink it proportionally
-            // so the whole marksheet remains on one page.
+            if (contentHeight <= availableHeight) {
+                return;
+            }
+
+            // Long marksheet: do NOT spread the sections apart.
+            // First reduce only the vertical gaps/paddings between sections.
+            const compactClass = "print-compact";
+            document.body.classList.add(compactClass);
+
+            let compactHeight = sheet.scrollHeight;
             let scale = 1;
-            if (contentHeight > availableHeight) {
+
+            if (compactHeight > availableHeight) {
                 scale = Math.min(
                     1,
-                    availableHeight / contentHeight,
+                    availableHeight / compactHeight,
                     availableWidth / contentWidth
                 );
             }
 
-            // Restore the full A4 page and let flex distribute extra empty space
-            // evenly between the major sections when the content is short.
-            sheet.style.height = originalHeight + "px";
-            sheet.style.minHeight = "297mm";
-            sheet.style.justifyContent = "space-between";
             sheet.style.setProperty("--print-scale", scale.toFixed(4));
-            document.body.classList.add("print-fit");
         }
 
         window.addEventListener("beforeprint", fitPrintableMarksheet);
         window.addEventListener("afterprint", function () {
-            document.body.classList.remove("print-fit");
-            App.$("#sheet").style.removeProperty("--print-scale");
+            document.body.classList.remove("print-fit", "print-compact");
+            const sheet = App.$("#sheet");
+            sheet.style.removeProperty("--print-scale");
+            const footer = sheet.querySelector("footer");
+            if (footer) footer.style.removeProperty("margin-top");
         });
 
         load();
