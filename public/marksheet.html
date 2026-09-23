@@ -77,7 +77,7 @@
             return '<div class="flex gap-2"><dt class="w-28 shrink-0 font-bold text-slate-500">' + App.esc(label) + ':</dt><dd>' + App.esc(value || "-") + "</dd></div>";
         }
         function box(label, value, bad) {
-            return '<div class="rounded-lg border border-slate-300 p-2 text-center"><p class="text-[11px] text-slate-500">' + App.esc(label) +
+            return '<div class="rounded-lg border-2 border-slate-300 p-2 text-center"><p class="text-[11px] text-slate-500">' + App.esc(label) +
                 '</p><p class="text-lg font-bold ' + (bad ? "text-red-600" : "") + '">' + App.esc(value) + "</p></div>";
         }
 
