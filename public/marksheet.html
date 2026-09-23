@@ -235,53 +235,54 @@
             const sheet = App.$("#sheet");
             if (!sheet) return;
 
+            document.body.classList.remove("print-fit", "print-compact");
             sheet.style.setProperty("--print-scale", "1");
-            document.body.classList.remove("print-fit");
 
+            const footer = sheet.querySelector("footer");
+            if (footer) footer.style.marginTop = "auto";
+
+            // A4 printable inner height. Keep the 4px outer border unchanged.
             const pageHeight = 297 * 3.779527559;
-            const pageWidth = 210 * 3.779527559;
-            const border = 4;
-            const availableHeight = pageHeight - (border * 2);
-            const availableWidth = pageWidth - (border * 2);
+            const innerHeight = pageHeight - 8;
 
-            // Short marksheet: keep all sections in their normal positions.
-            // Only move QR/signature to the bottom of the A4 page.
+            // Keep the marksheet exactly as designed when it fits.
             sheet.style.height = "297mm";
             sheet.style.minHeight = "297mm";
             sheet.style.justifyContent = "flex-start";
 
-            const footer = sheet.querySelector("footer");
-            if (footer) {
-                footer.style.marginTop = "auto";
-            }
+            // QR + signature go to the bottom only when there is spare A4 space.
+            if (footer) footer.style.marginTop = "auto";
 
-            // Measure the real content height.
-            sheet.style.setProperty("--print-scale", "1");
-            document.body.classList.add("print-fit");
-            const contentHeight = sheet.scrollHeight;
-            const contentWidth = sheet.scrollWidth;
+            // Measure actual content without counting the sheet's own 297mm height.
+            let contentHeight = 0;
+            Array.from(sheet.children).forEach(function (el) {
+                const r = el.getBoundingClientRect();
+                const styles = getComputedStyle(el);
+                contentHeight += r.height + parseFloat(styles.marginTop || 0) + parseFloat(styles.marginBottom || 0);
+            });
 
-            if (contentHeight <= availableHeight) {
+            if (contentHeight <= innerHeight) {
                 return;
             }
 
-            // Long marksheet: do NOT spread the sections apart.
-            // First reduce only the vertical gaps/paddings between sections.
-            const compactClass = "print-compact";
-            document.body.classList.add(compactClass);
+            // Oversized marksheet: first reduce only unnecessary gaps.
+            document.body.classList.add("print-compact");
+            if (footer) footer.style.marginTop = "6px";
 
-            let compactHeight = sheet.scrollHeight;
-            let scale = 1;
+            contentHeight = 0;
+            Array.from(sheet.children).forEach(function (el) {
+                const r = el.getBoundingClientRect();
+                const styles = getComputedStyle(el);
+                contentHeight += r.height + parseFloat(styles.marginTop || 0) + parseFloat(styles.marginBottom || 0);
+            });
 
-            if (compactHeight > availableHeight) {
-                scale = Math.min(
-                    1,
-                    availableHeight / compactHeight,
-                    availableWidth / contentWidth
-                );
+            // If still too tall, scale the complete content proportionally.
+            // The outer A4 border remains fixed.
+            if (contentHeight > innerHeight) {
+                const scale = Math.max(0.72, Math.min(1, innerHeight / contentHeight));
+                sheet.style.setProperty("--print-scale", scale.toFixed(4));
+                document.body.classList.add("print-fit");
             }
-
-            sheet.style.setProperty("--print-scale", scale.toFixed(4));
         }
 
         window.addEventListener("beforeprint", fitPrintableMarksheet);
