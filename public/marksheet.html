@@ -6,7 +6,120 @@
     <title>Marksheet</title>
     <link rel="icon" href="/6716-removebg-preview.png">
     <link rel="stylesheet" href="/css/app.css">
-    <style>@page { size: A4; margin: 10mm; }</style>
+    <style>
+        @page { size: A4 portrait; margin: 0; }
+
+        @media print {
+            html, body {
+                width: 210mm !important;
+                min-width: 210mm !important;
+                height: 297mm !important;
+                min-height: 297mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                background: #fff !important;
+                overflow: hidden !important;
+            }
+
+            body {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+
+            #error {
+                display: none !important;
+            }
+
+            #sheet {
+                box-sizing: border-box !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: flex-start !important;
+                width: 193mm !important;
+                height: 280mm !important;
+                min-height: 280mm !important;
+                max-width: none !important;
+                margin: 8.5mm auto !important;
+                padding: 14mm !important;
+                overflow: hidden !important;
+                box-shadow: none !important;
+                break-inside: avoid-page !important;
+                page-break-inside: avoid !important;
+                transform-origin: top center !important;
+            }
+
+            #sheet > header,
+            #sheet > .my-4,
+            #sheet > #info,
+            #sheet > .mt-5,
+            #sheet > #summary {
+                flex-shrink: 0 !important;
+            }
+
+            #sheet > footer {
+                flex-shrink: 0 !important;
+                margin-top: auto !important;
+            }
+
+            #sheet > p.mt-6 {
+                flex-shrink: 0 !important;
+            }
+
+            /* Keep the printable table/summary visually close to the PDF version. */
+            #sheet table {
+                table-layout: fixed !important;
+                width: 100% !important;
+            }
+
+            #sheet th,
+            #sheet td {
+                padding: 0.45rem 0.55rem !important;
+                line-height: 1.2 !important;
+            }
+
+            #sheet thead th,
+            #sheet tbody td {
+                border-width: 1px !important;
+            }
+
+            body.print-compact #sheet {
+                padding: 10mm !important;
+            }
+
+            body.print-compact #sheet > .my-4 {
+                margin-top: 5px !important;
+                margin-bottom: 5px !important;
+            }
+
+            body.print-compact #sheet > #info {
+                row-gap: 2px !important;
+            }
+
+            body.print-compact #sheet > .mt-5 {
+                margin-top: 6px !important;
+            }
+
+            body.print-compact #sheet > #summary {
+                margin-top: 6px !important;
+            }
+
+            body.print-compact #sheet > footer {
+                margin-top: 8px !important;
+            }
+
+            body.print-compact #sheet > p.mt-6 {
+                margin-top: 4px !important;
+            }
+
+            body.print-fit #sheet {
+                transform: scale(var(--print-scale, 1)) !important;
+            }
+        }
+    </style>
 </head>
 <body class="bg-slate-200 py-6 print:bg-white print:py-0">
     <div class="no-print mx-auto mb-4 flex max-w-[820px] flex-wrap items-center justify-between gap-2 px-3">
@@ -116,6 +229,56 @@
             pdf.classList.remove("hidden");
             App.$("#sheet").classList.remove("hidden");
         }
+        function preparePrintLayout() {
+            const sheet = App.$("#sheet");
+            if (!sheet || sheet.classList.contains("hidden")) return;
+
+            document.body.classList.remove("print-compact", "print-fit");
+            sheet.style.removeProperty("--print-scale");
+
+            // Default: keep the normal layout. Only QR/signature area goes to the bottom.
+            sheet.style.transform = "none";
+
+            const availableHeight = 280 * 3.779527559 - 28 * 3.779527559;
+            let contentHeight = sheet.scrollHeight;
+
+            // If the content is taller than the printable inner area,
+            // first reduce only the unnecessary gaps.
+            if (contentHeight > availableHeight) {
+                document.body.classList.add("print-compact");
+                contentHeight = sheet.scrollHeight;
+            }
+
+            // If it is still too tall, shrink the complete marksheet proportionally.
+            if (contentHeight > availableHeight) {
+                const scale = Math.min(1, availableHeight / contentHeight);
+                sheet.style.setProperty("--print-scale", scale.toFixed(4));
+                document.body.classList.add("print-fit");
+            }
+        }
+
+        function resetPrintLayout() {
+            const sheet = App.$("#sheet");
+            document.body.classList.remove("print-compact", "print-fit");
+            if (sheet) {
+                sheet.style.removeProperty("--print-scale");
+                sheet.style.removeProperty("transform");
+            }
+        }
+
+        window.addEventListener("beforeprint", preparePrintLayout);
+        window.addEventListener("afterprint", resetPrintLayout);
+
+        if (window.matchMedia) {
+            const printMedia = window.matchMedia("print");
+            if (printMedia.addEventListener) {
+                printMedia.addEventListener("change", function (event) {
+                    if (event.matches) preparePrintLayout();
+                    else resetPrintLayout();
+                });
+            }
+        }
+
         load();
     </script>
 </body>
