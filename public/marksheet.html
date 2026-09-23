@@ -64,10 +64,10 @@
             #sheet {
                 box-sizing: border-box !important;
                 max-width: none !important;
-                width: calc(210mm - 17mm) !important;
-                min-height: calc(297mm - 17mm) !important;
-                height: calc(297mm - 17mm) !important;
-                margin: 8.5mm auto !important;
+                width: calc(210mm - 9mm) !important;
+                min-height: calc(297mm - 9mm) !important;
+                height: calc(297mm - 9mm) !important;
+                margin: 4.5mm auto !important;
                 padding: 8mm !important;
                 box-shadow: none !important;
                 border-width: 4px !important;
@@ -235,8 +235,8 @@
             const footer = sheet.querySelector("footer");
             if (footer) footer.style.marginTop = "auto";
 
-            // Match the PDF border inset: 24pt is approximately 8.5mm.
-            const borderInset = 8.5;
+            // Keep an equal 4.5mm print margin around the marksheet.
+            const borderInset = 4.5;
             const pageHeight = 297 - (borderInset * 2);
             const innerHeight = pageHeight * 3.779527559;
 
