@@ -11,14 +11,17 @@ const LOGO = path.join(ROOT, "public", "6716-removebg-preview.png");
 const SIGNATURE = path.join(ROOT, "public", "head-signature.png");
 
 const COLORS = { ink: "#111827", muted: "#4b5563", line: "#9ca3af", head: "#e5e7eb", brand: "#1e3a8a" };
-const BORDER_INSET = 12.76;
+const BORDER_INSET = 4.5 * 72 / 25.4;
 
 function drawPageBorder(doc, width, height) {
-    doc.lineWidth(2).strokeColor(COLORS.brand)
-        .rect(BORDER_INSET, BORDER_INSET, width - BORDER_INSET * 2, height - BORDER_INSET * 2).stroke();
-    const innerInset = BORDER_INSET + 5;
-    doc.lineWidth(0.6).strokeColor(COLORS.brand)
-        .rect(innerInset, innerInset, width - innerInset * 2, height - innerInset * 2).stroke();
+    const outerLineWidth = 2;
+    const outerRectInset = BORDER_INSET + outerLineWidth / 2;
+    doc.lineWidth(outerLineWidth).strokeColor(COLORS.brand)
+        .rect(outerRectInset, outerRectInset, width - outerRectInset * 2, height - outerRectInset * 2).stroke();
+    const innerLineWidth = 0.6;
+    const innerRectInset = BORDER_INSET + 5 + innerLineWidth / 2;
+    doc.lineWidth(innerLineWidth).strokeColor(COLORS.brand)
+        .rect(innerRectInset, innerRectInset, width - innerRectInset * 2, height - innerRectInset * 2).stroke();
 }
 
 function createDocument(title) {
