@@ -4,120 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Marksheet</title>
-    <link rel="icon" href="/6716-removebg-preview.png?v=3">
+    <link rel="icon" href="/6716-removebg-preview.png">
     <link rel="stylesheet" href="/css/app.css">
-    <style>
-        @page { size: A4 portrait; margin: 4.5mm; }
-        #sheet {
-            width: 100%;
-            max-width: 820px;
-        }
-        #sheet table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-            border: 2px solid #fcfcfc;
-        }
-        #sheet th,
-        #sheet td {
-            padding: 0.45rem 0.55rem;
-            line-height: 1.2;
-            vertical-align: middle;
-        }
-        #sheet th {
-            font-size: 14px;
-            letter-spacing: 0.02em;
-        }
-        #sheet td {
-            font-size: 14px;
-        }
-        #sheet thead th,
-        #sheet tbody td {
-            border-width: 2px !important;
-        }
-        #sheet th:nth-child(1),
-        #sheet td:nth-child(1) { width: 30%; }
-        #sheet th:nth-child(2),
-        #sheet td:nth-child(2) { width: 12%; }
-        #sheet th:nth-child(3),
-        #sheet td:nth-child(3) { width: 14%; }
-        #sheet th:nth-child(4),
-        #sheet td:nth-child(4) { width: 14%; }
-        #sheet th:nth-child(5),
-        #sheet td:nth-child(5) { width: 12%; }
-        #sheet th:nth-child(6),
-        #sheet td:nth-child(6) { width: 18%; }
-
-        @media print {
-            html, body {
-                width: 100% !important;
-                height: 100% !important;
-                margin: 0 !important;
-                padding: 0 !important;
-                background: #fff !important;
-            }
-            body {
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-            .no-print {
-                display: none !important;
-            }
-            #sheet {
-                box-sizing: border-box !important;
-                max-width: none !important;
-                width: 100% !important;
-                min-height: 100% !important;
-                height: 100% !important;
-                margin: 0 !important;
-                padding: 8mm !important;
-                box-shadow: none !important;
-                border-width: 4px !important;
-                overflow: hidden !important;
-                display: flex !important;
-                flex-direction: column !important;
-                justify-content: space-between !important;
-                transform-origin: center center !important;
-            }
-            #sheet > header,
-            #sheet > .my-4,
-            #sheet > #info,
-            #sheet > .mt-5,
-            #sheet > #summary,
-            #sheet > footer,
-            #sheet > p.mt-6 {
-                flex-shrink: 0 !important;
-            }
-            body.print-fit #sheet {
-                transform: scale(var(--print-scale, 1)) !important;
-            }
-
-            /* Only compact the layout when the marksheet is too long for one A4 page. */
-            body.print-compact #sheet > .my-4 {
-                margin-top: 6px !important;
-                margin-bottom: 6px !important;
-            }
-            body.print-compact #sheet > #info {
-                row-gap: 2px !important;
-            }
-            body.print-compact #sheet > .mt-5 {
-                margin-top: 6px !important;
-            }
-            body.print-compact #sheet > #summary {
-                margin-top: 6px !important;
-            }
-            body.print-compact #sheet > footer {
-                margin-top: 6px !important;
-            }
-            body.print-compact #sheet > p.mt-6 {
-                margin-top: 4px !important;
-            }
-            body.print-compact #sheet th,
-            body.print-compact #sheet td {
-                padding: 0.3rem 0.38rem;
-            }
-        }
-    </style>
+    <style>@page { size: A4; margin: 10mm; }</style>
 </head>
 <body class="bg-slate-200 py-6 print:bg-white print:py-0">
     <div class="no-print mx-auto mb-4 flex max-w-[820px] flex-wrap items-center justify-between gap-2 px-3">
@@ -132,7 +21,7 @@
 
     <article id="sheet" class="mx-auto hidden max-w-[820px] border-4 border-double border-brand-800 bg-white p-8 shadow-xl print:max-w-none print:shadow-none">
         <header class="text-center">
-            <img src="/6716-removebg-preview.png?v=3" alt="" class="mx-auto aspect-square h-16 w-16 rounded-full bg-white/90 object-contain p-0" onerror="this.style.display='none'">
+            <img src="/6716-removebg-preview.png" alt="" class="mx-auto h-16 w-16 object-contain" onerror="this.style.display='none'">
             <h1 id="school-name" class="mt-1 text-2xl font-bold text-brand-800"></h1>
             <p id="school-address" class="text-sm text-slate-500"></p>
             <p id="school-eiin" class="text-sm text-slate-500"></p>
@@ -227,70 +116,6 @@
             pdf.classList.remove("hidden");
             App.$("#sheet").classList.remove("hidden");
         }
-        function fitPrintableMarksheet() {
-            const sheet = App.$("#sheet");
-            if (!sheet) return;
-
-            document.body.classList.remove("print-fit", "print-compact");
-            sheet.style.setProperty("--print-scale", "1");
-
-            const footer = sheet.querySelector("footer");
-            if (footer) footer.style.marginTop = "auto";
-
-            // Keep an equal 4.5mm print margin around the marksheet.
-            const borderInset = 4.5;
-            const pageHeight = 297 - (borderInset * 2);
-            const innerHeight = pageHeight * 3.779527559;
-
-            // Keep the marksheet exactly as designed when it fits.
-            sheet.style.height = pageHeight + "mm";
-            sheet.style.minHeight = pageHeight + "mm";
-            sheet.style.justifyContent = "flex-start";
-
-            // QR + signature go to the bottom only when there is spare A4 space.
-            if (footer) footer.style.marginTop = "auto";
-
-            // Measure actual content without counting the sheet's own 297mm height.
-            let contentHeight = 0;
-            Array.from(sheet.children).forEach(function (el) {
-                const r = el.getBoundingClientRect();
-                const styles = getComputedStyle(el);
-                contentHeight += r.height + parseFloat(styles.marginTop || 0) + parseFloat(styles.marginBottom || 0);
-            });
-
-            if (contentHeight <= innerHeight) {
-                return;
-            }
-
-            // Oversized marksheet: first reduce only unnecessary gaps.
-            document.body.classList.add("print-compact");
-            if (footer) footer.style.marginTop = "6px";
-
-            contentHeight = 0;
-            Array.from(sheet.children).forEach(function (el) {
-                const r = el.getBoundingClientRect();
-                const styles = getComputedStyle(el);
-                contentHeight += r.height + parseFloat(styles.marginTop || 0) + parseFloat(styles.marginBottom || 0);
-            });
-
-            // If still too tall, scale the complete content proportionally.
-            // The outer A4 border remains fixed.
-            if (contentHeight > innerHeight) {
-                const scale = Math.max(0.55, Math.min(1, innerHeight / contentHeight));
-                sheet.style.setProperty("--print-scale", scale.toFixed(4));
-                document.body.classList.add("print-fit");
-            }
-        }
-
-        window.addEventListener("beforeprint", fitPrintableMarksheet);
-        window.addEventListener("afterprint", function () {
-            document.body.classList.remove("print-fit", "print-compact");
-            const sheet = App.$("#sheet");
-            sheet.style.removeProperty("--print-scale");
-            const footer = sheet.querySelector("footer");
-            if (footer) footer.style.removeProperty("margin-top");
-        });
-
         load();
     </script>
 </body>

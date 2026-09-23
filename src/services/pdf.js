@@ -137,18 +137,18 @@ function drawMarksheet(doc, data, extra = {}) {
     const scale = innerW / tableW;
     cols.forEach((c) => { c.w *= scale; });
 
-    const rowH = 19;
+    const rowH = 21;
     const drawRow = (cells, opts = {}) => {
         let x = M;
         if (opts.fill) doc.rect(M, y, innerW, rowH).fill(opts.fill);
-        doc.fillColor(COLORS.ink).font(opts.bold ? "bold" : "body").fontSize(10.2);
+        doc.fillColor(COLORS.ink).font(opts.bold ? "bold" : "body").fontSize(10.5);
         cols.forEach((c, i) => {
-            doc.text(fit(doc, cells[i], c.w - 12), x + 6, y + 4, {
+            doc.text(fit(doc, cells[i], c.w - 12), x + 6, y + 5, {
                 width: c.w - 10, align: c.align, lineBreak: false
             });
             x += c.w;
         });
-        doc.lineWidth(1.6).strokeColor(COLORS.line).rect(M, y, innerW, rowH).stroke();
+        doc.lineWidth(0.5).strokeColor(COLORS.line).rect(M, y, innerW, rowH).stroke();
         let vx = M;
         cols.slice(0, -1).forEach((c) => {
             vx += c.w;
@@ -188,7 +188,7 @@ function drawMarksheet(doc, data, extra = {}) {
     const boxW = (innerW - gap * (boxes.length - 1)) / boxes.length;
     boxes.forEach((b, i) => {
         const x = M + i * (boxW + gap);
-        doc.lineWidth(1.8).strokeColor(COLORS.line).roundedRect(x, y, boxW, 46, 4).stroke();
+        doc.lineWidth(0.8).strokeColor(COLORS.line).roundedRect(x, y, boxW, 46, 4).stroke();
         doc.font("body").fontSize(9.5).fillColor(COLORS.muted)
             .text(b[0], x, y + 7, { width: boxW, align: "center", lineBreak: false });
         const failed = b[0] === "Result" && String(b[1]).toLowerCase() === "fail";
