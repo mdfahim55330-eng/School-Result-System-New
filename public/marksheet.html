@@ -110,15 +110,9 @@
             body.print-compact #sheet > p.mt-6 {
                 margin-top: 4px !important;
             }
-            #sheet th,
-            #sheet td {
+            body.print-compact #sheet th,
+            body.print-compact #sheet td {
                 padding: 0.3rem 0.38rem;
-            }
-            #summary {
-                margin-top: 12px !important;
-            }
-            footer {
-                margin-top: 12px !important;
             }
         }
     </style>
@@ -279,7 +273,7 @@
             // If still too tall, scale the complete content proportionally.
             // The outer A4 border remains fixed.
             if (contentHeight > innerHeight) {
-                const scale = Math.max(0.72, Math.min(1, innerHeight / contentHeight));
+                const scale = Math.max(0.55, Math.min(1, innerHeight / contentHeight));
                 sheet.style.setProperty("--print-scale", scale.toFixed(4));
                 document.body.classList.add("print-fit");
             }
