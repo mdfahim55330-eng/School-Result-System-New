@@ -7,7 +7,7 @@
     <link rel="icon" href="/6716-removebg-preview.png?v=3">
     <link rel="stylesheet" href="/css/app.css">
     <style>
-        @page { size: A4 portrait; margin: 0; }
+        @page { size: A4 portrait; margin: 4.5mm; }
         #sheet {
             width: 100%;
             max-width: 820px;
@@ -50,6 +50,8 @@
 
         @media print {
             html, body {
+                width: 100% !important;
+                height: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
                 background: #fff !important;
@@ -64,10 +66,10 @@
             #sheet {
                 box-sizing: border-box !important;
                 max-width: none !important;
-                width: calc(210mm - 9mm) !important;
-                min-height: calc(297mm - 9mm) !important;
-                height: calc(297mm - 9mm) !important;
-                margin: 4.5mm auto !important;
+                width: 100% !important;
+                min-height: 100% !important;
+                height: 100% !important;
+                margin: 0 !important;
                 padding: 8mm !important;
                 box-shadow: none !important;
                 border-width: 4px !important;
