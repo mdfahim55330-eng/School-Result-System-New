@@ -12,7 +12,7 @@
             width: 100%;
             border-collapse: collapse;
             table-layout: fixed;
-            border: 1px solid #020b16;
+            border: 2px solid #cbd5e1;
         }
         #sheet th,
         #sheet td {
@@ -26,6 +26,10 @@
         }
         #sheet td {
             font-size: 12px;
+        }
+        #sheet thead th,
+        #sheet tbody td {
+            border-width: 2px !important;
         }
         #sheet th:nth-child(1),
         #sheet td:nth-child(1) { width: 30%; }
@@ -71,12 +75,12 @@
             <table class="w-full text-sm">
                 <thead class="bg-slate-100">
                     <tr class="text-left">
-                        <th class="border-b-2 border-r-2 border-slate-400 px-3 py-2">Subject</th>
-                        <th class="border-b-2 border-r-2 border-slate-400 px-3 py-2 text-center">Code</th>
-                        <th class="border-b-2 border-r-2 border-slate-400 px-3 py-2 text-center">Full Marks</th>
-                        <th class="border-b-2 border-r-2 border-slate-400 px-3 py-2 text-center">Marks</th>
-                        <th class="border-b-2 border-r-2 border-slate-400 px-3 py-2 text-center">Grade</th>
-                        <th class="border-b-2 border-slate-400 px-3 py-2 text-center">Grade Point</th>
+                        <th class="border-b-[3px] border-r-[3px] border-slate-500 px-3 py-2">Subject</th>
+                        <th class="border-b-[3px] border-r-[3px] border-slate-500 px-3 py-2 text-center">Code</th>
+                        <th class="border-b-[3px] border-r-[3px] border-slate-500 px-3 py-2 text-center">Full Marks</th>
+                        <th class="border-b-[3px] border-r-[3px] border-slate-500 px-3 py-2 text-center">Marks</th>
+                        <th class="border-b-[3px] border-r-[3px] border-slate-500 px-3 py-2 text-center">Grade</th>
+                        <th class="border-b-[3px] border-slate-500 px-3 py-2 text-center">Grade Point</th>
                     </tr>
                 </thead>
                 <tbody id="rows"></tbody>
@@ -133,12 +137,12 @@
             App.$("#info").innerHTML = info("Student Name", s.name) + info("Roll", s.roll) + info("Registration", s.registration) +
                 info("Class", s.class_name) + info("Group", s.group_name) + info("Year", s.exam_year);
             App.$("#rows").innerHTML = d.subjects.map(function (x) {
-                return "<tr><td class=\"border-b-2 border-r-2 border-slate-300 px-3 py-1.5\">" + App.esc(x.subject_name) + "</td>" +
-                    '<td class="border-b-2 border-r-2 border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.subject_code) + "</td>" +
-                    '<td class="border-b-2 border-r-2 border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.full_marks) + "</td>" +
-                    '<td class="border-b-2 border-r-2 border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.marks) + "</td>" +
-                    '<td class="border-b-2 border-r-2 border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.grade) + "</td>" +
-                    '<td class="border-b-2 border-slate-300 px-3 py-1.5 text-center">' + Number(x.grade_point).toFixed(2) + "</td></tr>";
+                return "<tr><td class=\"border-b-[3px] border-r-[3px] border-slate-300 px-3 py-1.5\">" + App.esc(x.subject_name) + "</td>" +
+                    '<td class="border-b-[3px] border-r-[3px] border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.subject_code) + "</td>" +
+                    '<td class="border-b-[3px] border-r-[3px] border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.full_marks) + "</td>" +
+                    '<td class="border-b-[3px] border-r-[3px] border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.marks) + "</td>" +
+                    '<td class="border-b-[3px] border-r-[3px] border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.grade) + "</td>" +
+                    '<td class="border-b-[3px] border-slate-300 px-3 py-1.5 text-center">' + Number(x.grade_point).toFixed(2) + "</td></tr>";
             }).join("");
             const failed = String(m.result).toLowerCase() === "fail";
             App.$("#summary").innerHTML = box("Total Marks", m.total_marks + " / " + m.total_full_marks) + box("GPA", Number(m.gpa).toFixed(2), failed) +
