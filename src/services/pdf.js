@@ -11,18 +11,6 @@ const LOGO = path.join(ROOT, "public", "6716-removebg-preview.png");
 const SIGNATURE = path.join(ROOT, "public", "head-signature.png");
 
 const COLORS = { ink: "#111827", muted: "#4b5563", line: "#9ca3af", head: "#e5e7eb", brand: "#1e3a8a" };
-const BORDER_INSET = 4.5 * 72 / 25.4;
-
-function drawPageBorder(doc, width, height) {
-    const outerLineWidth = 2;
-    const outerRectInset = BORDER_INSET + outerLineWidth / 2;
-    doc.lineWidth(outerLineWidth).strokeColor(COLORS.brand)
-        .rect(outerRectInset, outerRectInset, width - outerRectInset * 2, height - outerRectInset * 2).stroke();
-    const innerLineWidth = 0.6;
-    const innerRectInset = BORDER_INSET + 5 + innerLineWidth / 2;
-    doc.lineWidth(innerLineWidth).strokeColor(COLORS.brand)
-        .rect(innerRectInset, innerRectInset, width - innerRectInset * 2, height - innerRectInset * 2).stroke();
-}
 
 function createDocument(title) {
     const doc = new PDFDocument({
@@ -69,7 +57,8 @@ function drawMarksheet(doc, data, extra = {}) {
     doc.addPage({ size: "A4", margin: 0 });
 
     // page border (double line)
-    drawPageBorder(doc, W, H);
+    doc.lineWidth(2).strokeColor(COLORS.brand).rect(24, 24, W - 48, H - 48).stroke();
+    doc.lineWidth(0.6).strokeColor(COLORS.brand).rect(29, 29, W - 58, H - 58).stroke();
 
     let y = 46;
 
@@ -173,7 +162,7 @@ function drawMarksheet(doc, data, extra = {}) {
         if (y > H - 250) {
             // very long subject lists: continue on the next page
             doc.addPage({ size: "A4", margin: 0 });
-            drawPageBorder(doc, W, H);
+            doc.lineWidth(2).strokeColor(COLORS.brand).rect(24, 24, W - 48, H - 48).stroke();
             y = 46;
             drawRow(cols.map((c) => c.label), { bold: true, fill: COLORS.head });
         }
