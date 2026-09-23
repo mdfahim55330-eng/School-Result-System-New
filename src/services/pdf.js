@@ -57,8 +57,12 @@ function drawMarksheet(doc, data, extra = {}) {
     doc.addPage({ size: "A4", margin: 0 });
 
     // page border (double line)
-    doc.lineWidth(2).strokeColor(COLORS.brand).rect(24, 24, W - 48, H - 48).stroke();
-    doc.lineWidth(0.6).strokeColor(COLORS.brand).rect(29, 29, W - 58, H - 58).stroke();
+    const borderInset = 12.76;
+    doc.lineWidth(2).strokeColor(COLORS.brand)
+        .rect(borderInset, borderInset, W - borderInset * 2, H - borderInset * 2).stroke();
+    const innerBorderInset = borderInset + 5;
+    doc.lineWidth(0.6).strokeColor(COLORS.brand)
+        .rect(innerBorderInset, innerBorderInset, W - innerBorderInset * 2, H - innerBorderInset * 2).stroke();
 
     let y = 46;
 
