@@ -68,11 +68,23 @@
                 min-height: 297mm !important;
                 height: 297mm !important;
                 margin: 0 !important;
-                padding: 12mm !important;
+                padding: 8mm !important;
                 box-shadow: none !important;
                 border-width: 4px !important;
                 overflow: hidden !important;
-                transform-origin: top left !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+                transform-origin: center center !important;
+            }
+            #sheet > header,
+            #sheet > .my-4,
+            #sheet > #info,
+            #sheet > .mt-5,
+            #sheet > #summary,
+            #sheet > footer,
+            #sheet > p.mt-6 {
+                flex-shrink: 0 !important;
             }
             body.print-fit #sheet {
                 transform: scale(var(--print-scale, 1)) !important;
@@ -201,13 +213,41 @@
         function fitPrintableMarksheet() {
             const sheet = App.$("#sheet");
             if (!sheet) return;
+
             sheet.style.setProperty("--print-scale", "1");
             document.body.classList.remove("print-fit");
 
-            const pageHeight = 297 * 3.779527559; // 297mm in CSS pixels
-            const sheetHeight = Math.max(sheet.scrollHeight, sheet.offsetHeight);
-            const scale = Math.min(1, pageHeight / sheetHeight);
+            const pageHeight = 297 * 3.779527559;
+            const pageWidth = 210 * 3.779527559;
+            const border = 4;
+            const availableHeight = pageHeight - (border * 2);
+            const availableWidth = pageWidth - (border * 2);
 
+            // First measure the real content without forcing a scale.
+            const originalHeight = sheet.getBoundingClientRect().height;
+            sheet.style.height = "auto";
+            sheet.style.minHeight = "0";
+            sheet.style.justifyContent = "flex-start";
+
+            const contentHeight = sheet.scrollHeight;
+            const contentWidth = sheet.scrollWidth;
+
+            // If the marksheet is larger than one A4 page, shrink it proportionally
+            // so the whole marksheet remains on one page.
+            let scale = 1;
+            if (contentHeight > availableHeight) {
+                scale = Math.min(
+                    1,
+                    availableHeight / contentHeight,
+                    availableWidth / contentWidth
+                );
+            }
+
+            // Restore the full A4 page and let flex distribute extra empty space
+            // evenly between the major sections when the content is short.
+            sheet.style.height = originalHeight + "px";
+            sheet.style.minHeight = "297mm";
+            sheet.style.justifyContent = "space-between";
             sheet.style.setProperty("--print-scale", scale.toFixed(4));
             document.body.classList.add("print-fit");
         }
