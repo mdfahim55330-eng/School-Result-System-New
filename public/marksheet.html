@@ -64,10 +64,10 @@
             #sheet {
                 box-sizing: border-box !important;
                 max-width: none !important;
-                width: 210mm !important;
-                min-height: 297mm !important;
-                height: 297mm !important;
-                margin: 0 !important;
+                width: calc(210mm - 17mm) !important;
+                min-height: calc(297mm - 17mm) !important;
+                height: calc(297mm - 17mm) !important;
+                margin: 8.5mm auto !important;
                 padding: 8mm !important;
                 box-shadow: none !important;
                 border-width: 4px !important;
@@ -235,13 +235,14 @@
             const footer = sheet.querySelector("footer");
             if (footer) footer.style.marginTop = "auto";
 
-            // A4 printable inner height. Keep the 4px outer border unchanged.
-            const pageHeight = 297 * 3.779527559;
-            const innerHeight = pageHeight - 8;
+            // Match the PDF border inset: 24pt is approximately 8.5mm.
+            const borderInset = 8.5;
+            const pageHeight = 297 - (borderInset * 2);
+            const innerHeight = pageHeight * 3.779527559;
 
             // Keep the marksheet exactly as designed when it fits.
-            sheet.style.height = "297mm";
-            sheet.style.minHeight = "297mm";
+            sheet.style.height = pageHeight + "mm";
+            sheet.style.minHeight = pageHeight + "mm";
             sheet.style.justifyContent = "flex-start";
 
             // QR + signature go to the bottom only when there is spare A4 space.
