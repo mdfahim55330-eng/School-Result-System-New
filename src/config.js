@@ -36,10 +36,10 @@ const config = {
         eiin: env.SCHOOL_EIIN || ""
     },
 
-    // "gpa"   -> pass students are ordered by GPA (high to low), then total marks. Fail = no position.
-    // "marks" -> pass students are ordered by total marks only. Fail = no position.
-    // Default is GPA-first ranking. Equal total marks share the same position even when GPA differs.
-    meritMode: (env.MERIT_MODE || "gpa").toLowerCase() === "gpa" ? "gpa" : "marks",
+    // "gpa"   -> pass students first: GPA (high to low), then total marks. Fail = no position.
+    // "marks" -> pass students are ranked by total/merit marks only. Fail = no position.
+    // Default is "marks" so class position follows total marks; set MERIT_MODE=gpa only if GPA-first ranking is required.
+    meritMode: (env.MERIT_MODE || "marks").toLowerCase() === "gpa" ? "gpa" : "marks",
 
     upload: {
         maxBytes: toInt(env.UPLOAD_MAX_MB, 5) * 1024 * 1024,
