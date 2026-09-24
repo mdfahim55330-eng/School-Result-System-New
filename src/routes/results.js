@@ -8,6 +8,7 @@ const { parse, z, text, int } = require("../validation");
 const { httpError } = require("../utils");
 const { gradeSubjects } = require("../services/grading");
 const { insertStudentWithResults, replaceResults, mapWriteError } = require("../services/results");
+const { getExamReport } = require("../services/reports");
 
 const router = express.Router();
 
@@ -97,6 +98,35 @@ router.get("/results", async (req, res) => {
          LIMIT 20000`,
         params
     );
+    // Reuse the exact Merit List calculation for Position and derive failed subjects
+    // from the saved subject grades, so 50/100-mark grading remains unchanged.
+    if (className && examName && examYear) {
+        const report = await getExamReport({
+            class_name: className,
+            exam_name: examName,
+            exam_year: Number(examYear)
+        });
+        const reportById = new Map(report.students.map((s) => {
+            const failed = report.subjects
+                .filter((sub) => String(s.grades[sub.id] || "").toUpperCase() === "F")
+                .map((sub) => sub.subject_name);
+            return [s.id, {
+                position: s.position,
+                failed_subjects: failed.join(", ")
+            }];
+        }));
+        rows.forEach((row) => {
+            const extra = reportById.get(row.id);
+            row.position = extra ? extra.position : null;
+            row.failed_subjects = extra ? extra.failed_subjects : "";
+        });
+    } else {
+        rows.forEach((row) => {
+            row.position = null;
+            row.failed_subjects = "";
+        });
+    }
+
     res.json({ success: true, results: rows });
 });
 
