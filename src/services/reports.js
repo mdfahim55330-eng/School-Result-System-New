@@ -13,9 +13,10 @@ function usesFourthSubjectRule(className) {
 
 /**
  * Give every student a position.
- *  mode "gpa"   : students who PASSED are ranked by GPA, then by total marks. Failed students get no position.
- *  mode "marks" : PASSED students are ranked by total marks only. Failed students get no position.
- * Equal GPA + equal total marks share the same position using competition ranking (1, 1, 3 ...).
+ *  mode "gpa"   : students who PASSED are ordered by GPA, then total marks.
+ *  mode "marks" : PASSED students are ordered by total marks.
+ * Students with the same total marks always share the same position, even if GPA differs.
+ * Positions use dense ranking: 1, 1, 2, 3, 3, 4 ...
  * Each student needs: final_gpa, result_status, merit_marks.
  */
 function assignPositions(students, mode = config.meritMode) {
@@ -37,7 +38,8 @@ function assignPositions(students, mode = config.meritMode) {
     let previous = null;
 
     ranked.forEach((student) => {
-        const key = `${mode === "gpa" ? round2(student.final_gpa) : ""}|${round2(student.total_marks)}`;
+        // Total marks determine whether students share a position, even when GPA differs.
+        const key = `total|${round2(student.total_marks)}`;
         if (previous === null) {
             position = 1;
         } else if (key !== previous) {
