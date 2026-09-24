@@ -24,35 +24,42 @@ function assignPositions(students, mode = config.meritMode) {
         .filter((s) => s.result_status === "Pass")
         .slice()
         .sort((a, b) => {
+            // Merit order: GPA first, then total marks.
             if (mode === "gpa") {
                 const g = round2(b.final_gpa) - round2(a.final_gpa);
                 if (g !== 0) return g;
             }
+
             const m = round2(b.total_marks) - round2(a.total_marks);
             if (m !== 0) return m;
+
             return compareRoll(a.roll, b.roll);
         });
 
+    // Position is based ONLY on total marks.
+    // Therefore students with equal total marks get the same position,
+    // even when their GPA is different.
     const positions = new Map();
-    let position = 0;
-    let previous = null;
+    const totalMarkPosition = new Map();
+    let nextPosition = 1;
+
+    // Collect unique total marks in descending order.
+    const totals = [...new Set(ranked.map((s) => round2(s.total_marks)))]
+        .sort((a, b) => b - a);
+
+    totals.forEach((total) => {
+        totalMarkPosition.set(total, nextPosition);
+        nextPosition += 1;
+    });
 
     ranked.forEach((student) => {
-        // Total marks determine whether students share a position, even when GPA differs.
-        const key = `total|${round2(student.total_marks)}`;
-        if (previous === null) {
-            position = 1;
-        } else if (key !== previous) {
-            // Dense ranking: 1, 1, 2, 3, 3, 4 ...
-            position += 1;
-        }
-        previous = key;
-        positions.set(student.id, position);
+        positions.set(student.id, totalMarkPosition.get(round2(student.total_marks)));
     });
 
     students.forEach((s) => {
         s.position = positions.has(s.id) ? positions.get(s.id) : null;
     });
+
     return students;
 }
 
