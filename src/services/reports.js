@@ -20,49 +20,39 @@ function usesFourthSubjectRule(className) {
  * Each student needs: final_gpa, result_status, merit_marks.
  */
 function assignPositions(students, mode = config.meritMode) {
-    const passed = students.filter((s) => s.result_status === "Pass");
-
-    // First group students by total marks. Everyone with the same total marks
-    // must receive the same position, even when their GPA is different.
-    const groups = new Map();
-    for (const student of passed) {
-        const total = round2(student.total_marks);
-        if (!groups.has(total)) groups.set(total, []);
-        groups.get(total).push(student);
-    }
-
-    // Order the total-mark groups by the best GPA in each group, then by total
-    // marks. This keeps GPA as the primary merit order while guaranteeing that
-    // equal total marks always share one position.
-    const rankedGroups = [...groups.entries()].sort((a, b) => {
-        const aBestGpa = Math.max(...a[1].map((s) => round2(s.final_gpa)));
-        const bBestGpa = Math.max(...b[1].map((s) => round2(s.final_gpa)));
-
-        if (mode === "gpa") {
-            const g = bBestGpa - aBestGpa;
-            if (g !== 0) return g;
-        }
-
-        const m = b[0] - a[0];
-        if (m !== 0) return m;
-
-        return 0;
-    });
+    const ranked = students
+        .filter((s) => s.result_status === "Pass")
+        .slice()
+        .sort((a, b) => {
+            if (mode === "gpa") {
+                const g = round2(b.final_gpa) - round2(a.final_gpa);
+                if (g !== 0) return g;
+            }
+            const m = round2(b.total_marks) - round2(a.total_marks);
+            if (m !== 0) return m;
+            return compareRoll(a.roll, b.roll);
+        });
 
     const positions = new Map();
+    let position = 0;
+    let previous = null;
 
-    // Dense ranking: 1, 1, 2, 3, 3, 4 ...
-    rankedGroups.forEach(([total], index) => {
-        const position = index + 1;
-        for (const student of groups.get(total)) {
-            positions.set(student.id, position);
+    ranked.forEach((student) => {
+        // Total marks determine whether students share a position, even when GPA differs.
+        const key = `total|${round2(student.total_marks)}`;
+        if (previous === null) {
+            position = 1;
+        } else if (key !== previous) {
+            // Dense ranking: 1, 1, 2, 3, 3, 4 ...
+            position += 1;
         }
+        previous = key;
+        positions.set(student.id, position);
     });
 
     students.forEach((s) => {
         s.position = positions.has(s.id) ? positions.get(s.id) : null;
     });
-
     return students;
 }
 
