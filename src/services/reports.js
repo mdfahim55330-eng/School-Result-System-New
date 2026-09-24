@@ -13,9 +13,9 @@ function usesFourthSubjectRule(className) {
 
 /**
  * Give every student a position.
- *  mode "gpa"   : students who PASSED are ranked by GPA, then by merit marks. Failed students get no position.
- *  mode "marks" : PASSED students are ranked by merit marks only. Failed students get no position.
- * Equal GPA + equal marks share the same position (1, 1, 3 ...).
+ *  mode "gpa"   : students who PASSED are ranked by GPA, then by total marks. Failed students get no position.
+ *  mode "marks" : PASSED students are ranked by total marks only. Failed students get no position.
+ * Equal GPA + equal total marks share the same position using competition ranking (1, 1, 3 ...).
  * Each student needs: final_gpa, result_status, merit_marks.
  */
 function assignPositions(students, mode = config.meritMode) {
@@ -27,7 +27,7 @@ function assignPositions(students, mode = config.meritMode) {
                 const g = round2(b.final_gpa) - round2(a.final_gpa);
                 if (g !== 0) return g;
             }
-            const m = round2(b.merit_marks) - round2(a.merit_marks);
+            const m = round2(b.total_marks) - round2(a.total_marks);
             if (m !== 0) return m;
             return compareRoll(a.roll, b.roll);
         });
@@ -37,11 +37,12 @@ function assignPositions(students, mode = config.meritMode) {
     let previous = null;
 
     ranked.forEach((student) => {
-        const key = `${mode === "gpa" ? round2(student.final_gpa) : ""}|${round2(student.merit_marks)}`;
+        const key = `${mode === "gpa" ? round2(student.final_gpa) : ""}|${round2(student.total_marks)}`;
         if (previous === null) {
             position = 1;
         } else if (key !== previous) {
-            position += 1;
+            // Competition ranking: 1, 1, 3, 4, 4, 6 ...
+            position = ranked.indexOf(student) + 1;
         }
         previous = key;
         positions.set(student.id, position);
