@@ -77,7 +77,7 @@
         App.$("#prev").disabled = page <= 1; App.$("#next").disabled = page >= pages;
         App.$("#rows").innerHTML = slice.map(function (r) {
             const draft = r.status !== "published";
-            return "<tr><td class="text-center font-semibold">" + (r.position == null ? "-" : App.esc(r.position)) + '</td><td class="font-semibold">' + App.esc(r.roll) + '</td><td class="font-medium text-slate-900">' + App.esc(r.name) + "</td><td>" + App.esc(r.class_name) + "</td><td>" +
+            return '<tr><td class="text-center font-semibold">' + (r.position == null ? "-" : App.esc(r.position)) + '</td><td class="font-semibold">' + App.esc(r.roll) + '</td><td class="font-medium text-slate-900">' + App.esc(r.name) + "</td><td>" + App.esc(r.class_name) + "</td><td>" +
                 App.esc(r.exam_name) + " " + App.esc(r.exam_year) + '</td><td class="text-center">' + App.fmtGpa(r.final_gpa) + '</td><td class="text-center">' + App.esc(r.final_grade) + "</td><td>" +
                 App.resultBadge(r.result_status) + "</td><td>" + App.statusBadge(r.status) + '</td><td class="max-w-[220px] whitespace-normal font-medium text-red-600">' + App.esc(r.failed_subjects || "-") + '</td><td class="whitespace-nowrap text-right">' +
                 '<button class="btn-secondary btn-sm" data-act="view" data-id="' + r.id + '">View</button> ' +
