@@ -39,7 +39,7 @@
     </section>
 
     <section class="card">
-        <div class="mb-3 flex items-center justify-between">
+        <div class="mb-3 flex items-center justify-between hidden" id="pagination-bar">
             <p class="text-sm text-slate-500" id="count"></p>
             <div class="flex items-center gap-2 text-sm">
                 <button id="prev" class="btn-secondary btn-sm">Prev</button>
@@ -58,7 +58,7 @@
 
 <script src="/js/app.js"></script>
 <script>
-    const PAGE = 25;
+    const PAGE = 20000;
     let all = [], page = 1, scope = null, isAdmin = false, timer = null;
 
     function filtered() {
