@@ -49,7 +49,7 @@
         </div>
         <div class="table-wrap">
             <table class="table">
-                <thead><tr><th>Roll</th><th>Name</th><th>Class</th><th>Exam</th><th class="text-center">GPA</th><th class="text-center">Grade</th><th>Result</th><th>Status</th><th class="text-right">Actions</th></tr></thead>
+                <thead><tr><th class="text-center">Position</th><th>Roll</th><th>Name</th><th>Class</th><th>Exam</th><th class="text-center">GPA</th><th class="text-center">Grade</th><th>Result</th><th>Status</th><th>Fail Subject</th><th class="text-right">Actions</th></tr></thead>
                 <tbody id="rows"></tbody>
             </table>
         </div>
@@ -77,14 +77,14 @@
         App.$("#prev").disabled = page <= 1; App.$("#next").disabled = page >= pages;
         App.$("#rows").innerHTML = slice.map(function (r) {
             const draft = r.status !== "published";
-            return "<tr><td class=\"font-semibold\">" + App.esc(r.roll) + '</td><td class="font-medium text-slate-900">' + App.esc(r.name) + "</td><td>" + App.esc(r.class_name) + "</td><td>" +
+            return "<tr><td class="text-center font-semibold">" + (r.position == null ? "-" : App.esc(r.position)) + '</td><td class="font-semibold">' + App.esc(r.roll) + '</td><td class="font-medium text-slate-900">' + App.esc(r.name) + "</td><td>" + App.esc(r.class_name) + "</td><td>" +
                 App.esc(r.exam_name) + " " + App.esc(r.exam_year) + '</td><td class="text-center">' + App.fmtGpa(r.final_gpa) + '</td><td class="text-center">' + App.esc(r.final_grade) + "</td><td>" +
-                App.resultBadge(r.result_status) + "</td><td>" + App.statusBadge(r.status) + '</td><td class="whitespace-nowrap text-right">' +
+                App.resultBadge(r.result_status) + "</td><td>" + App.statusBadge(r.status) + '</td><td class="max-w-[220px] whitespace-normal font-medium text-red-600">' + App.esc(r.failed_subjects || "-") + '</td><td class="whitespace-nowrap text-right">' +
                 '<button class="btn-secondary btn-sm" data-act="view" data-id="' + r.id + '">View</button> ' +
                 '<a class="btn-secondary btn-sm" href="/pages/individual-result.html?edit=' + r.id + '">Edit</a> ' +
                 (isAdmin ? (draft ? '<button class="btn-success btn-sm" data-act="publish" data-id="' + r.id + '">Publish</button> ' : '<button class="btn-warn btn-sm" data-act="unpublish" data-id="' + r.id + '">Unpublish</button> ') +
                     '<button class="btn-danger btn-sm" data-act="delete" data-id="' + r.id + '">Delete</button>' : "") + "</td></tr>";
-        }).join("") || App.emptyRow(9, "No results found.");
+        }).join("") || App.emptyRow(11, "No results found.");
     }
 
     async function load() {
