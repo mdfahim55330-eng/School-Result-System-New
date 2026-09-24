@@ -41,8 +41,8 @@ function assignPositions(students, mode = config.meritMode) {
         if (previous === null) {
             position = 1;
         } else if (key !== previous) {
-            // Competition ranking: 1, 1, 3, 4, 4, 6 ...
-            position = ranked.indexOf(student) + 1;
+            // Dense ranking: 1, 1, 2, 3, 3, 4 ...
+            position += 1;
         }
         previous = key;
         positions.set(student.id, position);
