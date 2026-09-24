@@ -20,40 +20,43 @@ function usesFourthSubjectRule(className) {
  * Each student needs: final_gpa, result_status, merit_marks.
  */
 function assignPositions(students, mode = config.meritMode) {
-    const ranked = students
-        .filter((s) => s.result_status === "Pass")
-        .slice()
-        .sort((a, b) => {
-            // Merit order: GPA first, then total marks.
-            if (mode === "gpa") {
-                const g = round2(b.final_gpa) - round2(a.final_gpa);
-                if (g !== 0) return g;
-            }
+    const passed = students.filter((s) => s.result_status === "Pass");
 
-            const m = round2(b.total_marks) - round2(a.total_marks);
-            if (m !== 0) return m;
+    // First group students by total marks. Everyone with the same total marks
+    // must receive the same position, even when their GPA is different.
+    const groups = new Map();
+    for (const student of passed) {
+        const total = round2(student.total_marks);
+        if (!groups.has(total)) groups.set(total, []);
+        groups.get(total).push(student);
+    }
 
-            return compareRoll(a.roll, b.roll);
-        });
+    // Order the total-mark groups by the best GPA in each group, then by total
+    // marks. This keeps GPA as the primary merit order while guaranteeing that
+    // equal total marks always share one position.
+    const rankedGroups = [...groups.entries()].sort((a, b) => {
+        const aBestGpa = Math.max(...a[1].map((s) => round2(s.final_gpa)));
+        const bBestGpa = Math.max(...b[1].map((s) => round2(s.final_gpa)));
 
-    // Position is based ONLY on total marks.
-    // Therefore students with equal total marks get the same position,
-    // even when their GPA is different.
-    const positions = new Map();
-    const totalMarkPosition = new Map();
-    let nextPosition = 1;
+        if (mode === "gpa") {
+            const g = bBestGpa - aBestGpa;
+            if (g !== 0) return g;
+        }
 
-    // Collect unique total marks in descending order.
-    const totals = [...new Set(ranked.map((s) => round2(s.total_marks)))]
-        .sort((a, b) => b - a);
+        const m = b[0] - a[0];
+        if (m !== 0) return m;
 
-    totals.forEach((total) => {
-        totalMarkPosition.set(total, nextPosition);
-        nextPosition += 1;
+        return 0;
     });
 
-    ranked.forEach((student) => {
-        positions.set(student.id, totalMarkPosition.get(round2(student.total_marks)));
+    const positions = new Map();
+
+    // Dense ranking: 1, 1, 2, 3, 3, 4 ...
+    rankedGroups.forEach(([total], index) => {
+        const position = index + 1;
+        for (const student of groups.get(total)) {
+            positions.set(student.id, position);
+        }
     });
 
     students.forEach((s) => {
