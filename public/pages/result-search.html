@@ -7,7 +7,7 @@
     <link rel="icon" href="/6716-removebg-preview.png?v=3">
     <link rel="stylesheet" href="/css/app.css">
 </head>
-<body class="min-h-screen bg-slate-100">
+<body class="flex min-h-screen flex-col bg-slate-100">
     <header class="bg-gradient-to-r from-brand-900 to-brand-700 text-white">
         <div class="mx-auto flex max-w-4xl items-center gap-3 px-4 py-5">
             <a href="/" class="flex items-center gap-3">
@@ -20,7 +20,7 @@
         </div>
     </header>
 
-    <main class="mx-auto max-w-4xl space-y-6 px-4 py-8">
+    <main class="mx-auto w-full max-w-4xl flex-1 space-y-6 px-4 py-8">
         <section class="card !p-6">
             <h2 class="text-lg font-bold">Search your result</h2>
             <p class="mb-5 text-sm text-slate-500">Choose your class, exam and year, then type your roll number.</p>
@@ -82,6 +82,8 @@
     <footer class="pb-8 text-center text-xs text-slate-400">&copy; <span id="year"></span> Shaheed Nur Hossain Memorial School</footer>
 
     <script src="/js/app.js"></script>
+    <footer class="no-print mt-auto border-t border-slate-200 bg-white px-4 py-5 text-center text-xs text-slate-500">Made with ❤️ by <span class="font-semibold text-slate-700">Mohammad Fahim</span></footer>
+
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
         let options = [];
