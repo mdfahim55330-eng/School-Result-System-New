@@ -223,13 +223,14 @@
             '<a href="/pages/result-search.html" target="_blank" class="nav-link">' + App.icon("external") + "<span>Public result page</span></a>" +
             '<a href="/pages/change-password.html" class="nav-link">' + App.icon("key") + "<span>Change password</span></a>" +
             '<button type="button" id="logout-btn" class="nav-link w-full text-left">' + App.icon("logout") + "<span>Logout</span></button></div></aside>" +
-            '<div class="min-w-0 flex-1">' +
+            '<div class="min-w-0 flex min-h-screen flex-1 flex-col">' +
             '<header class="no-print sticky top-0 z-20 flex h-14 items-center gap-3 border-b border-slate-200 bg-white/90 px-4 backdrop-blur">' +
             '<button type="button" id="menu-btn" class="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden" aria-label="Open menu">' + App.icon("menu") + "</button>" +
             '<h1 class="truncate text-base font-bold text-slate-900">' + App.esc(title) + "</h1>" +
             '<div class="ml-auto flex items-center gap-2"><span class="hidden text-sm text-slate-500 sm:inline">' + App.esc(user.username) + "</span>" +
             '<span class="' + (isAdmin ? "badge-blue" : "badge-gray") + '">' + (isAdmin ? "Admin" : "Teacher") + "</span></div></header>" +
-            '<div id="slot" class="mx-auto max-w-7xl p-4 sm:p-6"></div></div>';
+            '<div id="slot" class="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6"></div>' +
+            '<footer class="no-print mt-auto border-t border-slate-200 bg-white px-4 py-4 text-center text-xs text-slate-500">Made with <span aria-label="love">❤️</span> by <span class="font-semibold text-slate-700">Mohammad Fahim</span></footer></div>';
 
         document.body.insertBefore(shell, document.body.firstChild);
         document.getElementById("slot").appendChild(main);
