@@ -126,8 +126,8 @@ function drawMarksheet(doc, data, extra = {}) {
 
     // table
     const cols = [
-        { label: "Code", w: 60, align: "center" },
         { label: "Subject", w: 200, align: "left" },
+        { label: "Code", w: 60, align: "center" },
         { label: "Full Marks", w: 70, align: "center" },
         { label: "Marks", w: 60, align: "center" },
         { label: "Grade", w: 55, align: "center" },
