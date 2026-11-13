@@ -126,12 +126,12 @@ function drawMarksheet(doc, data, extra = {}) {
 
     // table
     const cols = [
-        { label: "Subject", w: 200, align: "left" },
         { label: "Code", w: 60, align: "center" },
+        { label: "Subject", w: 200, align: "left" },
         { label: "Full Marks", w: 70, align: "center" },
         { label: "Marks", w: 60, align: "center" },
         { label: "Grade", w: 55, align: "center" },
-        
+        { label: "Grade Point", w: 70, align: "center" }
     ];
     const tableW = cols.reduce((a, c) => a + c.w, 0);
     const scale = innerW / tableW;
