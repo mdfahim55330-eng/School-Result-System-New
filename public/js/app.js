@@ -230,7 +230,7 @@
             '<div class="ml-auto flex items-center gap-2"><span class="hidden text-sm text-slate-500 sm:inline">' + App.esc(user.username) + "</span>" +
             '<span class="' + (isAdmin ? "badge-blue" : "badge-gray") + '">' + (isAdmin ? "Admin" : "Teacher") + "</span></div></header>" +
             '<div id="slot" class="mx-auto w-full max-w-7xl flex-1 p-4 sm:p-6"></div>' +
-            '<footer class="no-print mt-auto border-t border-slate-200 bg-white px-4 py-4 text-center text-xs text-slate-500">Dveloped with <span aria-label="love">❤️</span> by <span class="font-semibold text-slate-700">Mohammad Fahim</span></footer></div>';
+            '<footer class="no-print mt-auto border-t border-slate-200 bg-white px-4 py-4 text-center text-xs text-slate-500">Dveloped by <span class="font-semibold text-slate-700">Mohammad Fahim</span></footer></div>';
 
         document.body.insertBefore(shell, document.body.firstChild);
         document.getElementById("slot").appendChild(main);
