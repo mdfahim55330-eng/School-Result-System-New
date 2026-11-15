@@ -183,7 +183,7 @@
                 roll: App.$("#roll").value.trim(), class_name: cls.value, exam_name: exam.value,
                 exam_year: year.value, captcha: App.$("#captcha").value.trim()
             };
-            const r = await App.api("/api/result/search", { method: "POST", body: payload, noRedirect: true });
+            const r = await App.api("/api/result/search", { method: "POST", json: payload, noRedirect: true });
             btn.disabled = false; btn.textContent = "Search result";
             refreshCaptcha();
             if (r.ok) show(r.data);
