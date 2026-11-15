@@ -33,21 +33,20 @@ function assignPositions(students, mode = config.meritMode) {
             return compareRoll(a.roll, b.roll);
         });
 
+    // A total-marks group shares one position even when GPA-first sorting
+    // places another total-marks group between two students in that group.
+    // Position numbers follow the first appearance in GPA-sorted order.
     const positions = new Map();
-    let position = 0;
-    let previous = null;
+    const positionByTotal = new Map();
+    let nextPosition = 0;
 
     ranked.forEach((student) => {
-        // Total marks determine whether students share a position, even when GPA differs.
-        const key = `total|${round2(student.total_marks)}`;
-        if (previous === null) {
-            position = 1;
-        } else if (key !== previous) {
-            // Dense ranking: 1, 1, 2, 3, 3, 4 ...
-            position += 1;
+        const totalKey = `total|${round2(student.total_marks)}`;
+        if (!positionByTotal.has(totalKey)) {
+            nextPosition += 1;
+            positionByTotal.set(totalKey, nextPosition);
         }
-        previous = key;
-        positions.set(student.id, position);
+        positions.set(student.id, positionByTotal.get(totalKey));
     });
 
     students.forEach((s) => {
