@@ -1,5 +1,5 @@
-"use strict";\n\nconst crypto = require("crypto");
-
+"use strict";
+const crypto = require("crypto");
 const express = require("express");
 const db = require("../db");
 const cache = require("../cache");
