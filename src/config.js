@@ -38,8 +38,8 @@ const config = {
 
     // "gpa"   -> pass students first: GPA (high to low), then total marks. Fail = no position.
     // "marks" -> pass students are ranked by total/merit marks only. Fail = no position.
-    // Default is "marks" so class position follows total marks; set MERIT_MODE=gpa only if GPA-first ranking is required.
-    meritMode: (env.MERIT_MODE || "marks").toLowerCase() === "gpa" ? "gpa" : "marks",
+    // Default is "gpa" for GPA-first ranking; MERIT_MODE=marks keeps the legacy marks-only mode.
+    meritMode: (env.MERIT_MODE || "gpa").toLowerCase() === "marks" ? "marks" : "gpa",
 
     upload: {
         maxBytes: toInt(env.UPLOAD_MAX_MB, 5) * 1024 * 1024,
