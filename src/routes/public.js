@@ -73,10 +73,12 @@ router.post("/api/result/search", publicLimiter, async (req, res) => {
     const challenge = req.session.resultCaptcha;
     delete req.session.resultCaptcha;
     const answer = String(req.body.captcha || "").trim();
-    if (!challenge || challenge.expires < Date.now() || !/^\\d{1,2}$/.test(answer) || answer !== challenge.answer) {
+    if (!challenge || challenge.expires < Date.now() || !/^\d{1,2}$/.test(answer) || answer !== challenge.answer) {
         throw httpError(400, "Invalid or expired CAPTCHA. Please try again.");
     }
-    const student = await findResult(req.query);
+    delete req.session.resultAccessStudentId;
+    const student = await findResult(req.body);
+    req.session.resultAccessStudentId = Number(student.id);
     const data = await buildResultData(student);
 
     const url = verify.verifyUrl(req, student.id);
@@ -89,6 +91,9 @@ router.post("/api/result/search", publicLimiter, async (req, res) => {
 
 router.get("/api/result/marksheet.pdf", pdfLimiter, async (req, res) => {
     const student = await findResult(req.query);
+    if (!req.session.resultAccessStudentId || Number(req.session.resultAccessStudentId) !== Number(student.id)) {
+        throw httpError(403, "Please complete the CAPTCHA and search for this result first.");
+    }
     const data = await buildResultData(student);
     const qr = await verify.qrBuffer(verify.verifyUrl(req, student.id));
 
