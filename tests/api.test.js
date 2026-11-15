@@ -30,6 +30,13 @@ function upload(buffer, fields) {
     return form;
 }
 
+async function captchaSearch(who, params) {
+    const challenge = await who.get("/api/result/captcha");
+    const match = challenge.data.match(/>(\\d+) \\+ (\\d+) = \\?<\\/text>/);
+    assert.ok(match, "CAPTCHA image contains a math question");
+    return who.post("/api/result/search", { ...params, captcha: String(Number(match[1]) + Number(match[2])) });
+}
+
 // ---------------------------------------------------------------------------
 test("position ranking uses dense positions for equal total marks", () => {
     const students = [
@@ -153,14 +160,14 @@ test("individual result: validation, duplicates, publish, search, verify, pdf", 
 
     // draft is invisible to the public
     const q = `roll=1&class_name=Ten&exam_name=Annual&exam_year=2026`;
-    assert.equal((await anon.get(`/api/result/search?${q}`)).status, 404);
+    assert.equal((await captchaSearch(anon, { roll: "1", class_name: "Ten", exam_name: "Annual", exam_year: 2026 })).status, 404);
     assert.equal((await anon.get(`/api/result/options`)).data.options.length, 0);
 
     // teacher cannot publish, admin can
     assert.equal((await teacher.put(`/api/admin/results/${ids.rahim}/publish`)).status, 403);
     assert.equal((await admin.put(`/api/admin/results/${ids.rahim}/publish`)).status, 200);
 
-    r = await anon.get(`/api/result/search?${q}`);
+    r = await captchaSearch(anon, { roll: "1", class_name: "Ten", exam_name: "Annual", exam_year: 2026 });
     assert.equal(r.status, 200);
     assert.equal(r.data.student.name, "Rahim Uddin");
     assert.equal(r.data.summary.gpa, 5);
@@ -187,8 +194,8 @@ test("individual result: validation, duplicates, publish, search, verify, pdf", 
     assert.ok(buf.length > 20000);
 
     // missing / bad parameters
-    assert.equal((await anon.get(`/api/result/search?roll=1`)).status, 400);
-    assert.equal((await anon.get(`/api/result/search?roll=99&class_name=Ten&exam_name=Annual&exam_year=2026`)).status, 404);
+    assert.equal((await captchaSearch(anon, { roll: "1" })).status, 400);
+    assert.equal((await captchaSearch(anon, { roll: "99", class_name: "Ten", exam_name: "Annual", exam_year: 2026 })).status, 404);
 });
 
 test("edit result, audit trail and teacher restriction", async () => {
@@ -338,7 +345,7 @@ test("bulk publish / unpublish and completeness", async () => {
     const scope = { class_name: "Ten", exam_name: "Annual", exam_year: 2026 };
     let r = await admin.post("/api/admin/results/publish-bulk", { ...scope, action: "unpublish" });
     assert.equal(r.status, 200);
-    assert.equal((await anon.get(`/api/result/search?roll=1&class_name=Ten&exam_name=Annual&exam_year=2026`)).status, 404);
+    assert.equal((await captchaSearch(anon, { roll: "1", class_name: "Ten", exam_name: "Annual", exam_year: 2026 })).status, 404);
 
     // a student with a missing main subject can never be published
     await require("./helpers").db.query(`DELETE FROM results WHERE student_id = ? AND subject_id = ?`, [ids.karim, ids.sub["109"]]);
@@ -407,7 +414,7 @@ test("security: headers, cross-site, staff pages, unknown routes", async () => {
     });
     assert.equal(c.status, 200);
     await admin.put(`/api/admin/results/${c.data.student_id}/publish`);
-    const s = await anon.get(`/api/result/search?roll=77&class_name=Ten&exam_name=Annual&exam_year=2026`);
+    const s = await captchaSearch(anon, { roll: "77", class_name: "Ten", exam_name: "Annual", exam_year: 2026 });
     const html = (await anon.get(new URL(s.data.verify_url).pathname)).data;
     assert.ok(!html.includes(evilName));
     assert.match(html, /&lt;img src=x/);
