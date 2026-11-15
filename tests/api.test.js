@@ -51,6 +51,25 @@ test("position ranking uses dense positions for equal total marks", () => {
     assert.equal(students[6].position, null);
 });
 
+test("GPA-first positions share a position for equal total marks even when non-adjacent", () => {
+    const students = [
+        { id: 1, roll: "1", result_status: "Pass", total_marks: 80, final_gpa: 5.00 },
+        { id: 2, roll: "2", result_status: "Pass", total_marks: 90, final_gpa: 4.50 },
+        { id: 3, roll: "3", result_status: "Pass", total_marks: 80, final_gpa: 4.00 },
+        { id: 4, roll: "4", result_status: "Pass", total_marks: 90, final_gpa: 3.50 },
+        { id: 5, roll: "5", result_status: "Fail", total_marks: 120, final_gpa: 0 }
+    ];
+
+    assignPositions(students, "gpa");
+
+    const byId = new Map(students.map((s) => [s.id, s.position]));
+    assert.equal(byId.get(1), 1);
+    assert.equal(byId.get(2), 2);
+    assert.equal(byId.get(3), 1);
+    assert.equal(byId.get(4), 2);
+    assert.equal(byId.get(5), null);
+});
+
 test("login, roles and forced password change", async () => {
     assert.equal((await anon.get("/api/admin/subjects")).status, 401);
     assert.equal((await anon.post("/api/admin/login", { username: "admin", password: "wrong-password" })).status, 401);
