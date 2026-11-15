@@ -89,6 +89,19 @@ router.post("/api/result/search", publicLimiter, async (req, res) => {
     res.json({ success: true, ...data });
 });
 
+router.get("/api/result/marksheet-data", publicLimiter, async (req, res) => {
+    const student = await findResult(req.query);
+    if (!req.session.resultAccessStudentId || Number(req.session.resultAccessStudentId) !== Number(student.id)) {
+        throw httpError(403, "Please complete the CAPTCHA and search for this result first.");
+    }
+    const data = await buildResultData(student);
+    const url = verify.verifyUrl(req, student.id);
+    data.verify_url = url;
+    data.qr = await verify.qrDataUrl(url);
+    res.setHeader("Cache-Control", "no-store");
+    res.json({ success: true, ...data });
+});
+
 router.get("/api/result/marksheet.pdf", pdfLimiter, async (req, res) => {
     const student = await findResult(req.query);
     if (!req.session.resultAccessStudentId || Number(req.session.resultAccessStudentId) !== Number(student.id)) {
