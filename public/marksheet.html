@@ -202,7 +202,7 @@
             }
             const q = "roll=" + encodeURIComponent(params.get("roll")) + "&class_name=" + encodeURIComponent(params.get("class_name")) +
                 "&exam_name=" + encodeURIComponent(params.get("exam_name")) + "&exam_year=" + encodeURIComponent(params.get("exam_year"));
-            const r = await App.api("/api/result/search?" + q, { noRedirect: true });
+            const r = await App.api("/api/result/marksheet-data?" + q, { noRedirect: true });
             if (!r.ok) return fail(r.data.message || "Result not found.");
 
             const d = r.data, s = d.student, m = d.summary;
