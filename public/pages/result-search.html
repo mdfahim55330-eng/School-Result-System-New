@@ -44,6 +44,16 @@
                     <input id="roll" type="text" inputmode="numeric" class="input" placeholder="e.g. 12" maxlength="50" required autocomplete="off">
                 </div>
                 <div class="sm:col-span-2 lg:col-span-4">
+                    <label class="label" for="captcha">Security check: solve this question</label>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <img id="captcha-image" alt="CAPTCHA math question" class="h-12 w-[180px] rounded-lg border border-slate-300 bg-slate-50">
+                        <button id="refresh-captcha" type="button" class="btn-secondary">New code</button>
+                        <input id="captcha" type="text" inputmode="numeric" pattern="[0-9]{1,2}" maxlength="2"
+                            class="input max-w-[9rem]" placeholder="Answer" autocomplete="off" required>
+                    </div>
+                    <p class="mt-1 text-xs text-slate-500">Enter the answer shown in the image to view your result.</p>
+                </div>
+                <div class="sm:col-span-2 lg:col-span-4">
                     <button id="search-btn" type="submit" class="btn-primary w-full sm:w-auto sm:min-w-[11rem] !py-2.5">Search result</button>
                 </div>
             </form>
@@ -157,21 +167,30 @@
             App.$("#result").scrollIntoView({ behavior: "smooth", block: "start" });
         }
 
+        function refreshCaptcha() {
+            App.$("#captcha-image").src = "/api/result/captcha?refresh=" + Date.now();
+            App.$("#captcha").value = "";
+        }
+        App.$("#refresh-captcha").onclick = refreshCaptcha;
+
         App.$("#search-form").onsubmit = async function (e) {
             e.preventDefault();
             setMessage("");
             App.$("#result").classList.add("hidden");
             const btn = App.$("#search-btn");
             btn.disabled = true; btn.textContent = "Searching...";
-            const q = new URLSearchParams({
-                roll: App.$("#roll").value.trim(), class_name: cls.value, exam_name: exam.value, exam_year: year.value
-            });
-            const r = await App.api("/api/result/search?" + q.toString(), { noRedirect: true });
+            const payload = {
+                roll: App.$("#roll").value.trim(), class_name: cls.value, exam_name: exam.value,
+                exam_year: year.value, captcha: App.$("#captcha").value.trim()
+            };
+            const r = await App.api("/api/result/search", { method: "POST", body: payload, noRedirect: true });
             btn.disabled = false; btn.textContent = "Search result";
+            refreshCaptcha();
             if (r.ok) show(r.data);
             else setMessage(r.data.message || "Result not found.", "error");
         };
 
+        refreshCaptcha();
         loadOptions();
     </script>
 </body>
