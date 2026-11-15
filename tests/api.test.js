@@ -32,7 +32,7 @@ function upload(buffer, fields) {
 
 async function captchaSearch(who, params) {
     const challenge = await who.get("/api/result/captcha");
-    const match = challenge.data.match(/>(\\d+) \\+ (\\d+) = \\?<\\/text>/);
+    const match = challenge.data.match(/>(\d+) \+ (\d+) = \?<\/text>/);
     assert.ok(match, "CAPTCHA image contains a math question");
     return who.post("/api/result/search", { ...params, captcha: String(Number(match[1]) + Number(match[2])) });
 }
