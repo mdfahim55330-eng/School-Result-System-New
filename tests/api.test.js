@@ -175,6 +175,10 @@ test("individual result: validation, duplicates, publish, search, verify, pdf", 
     assert.ok(r.data.qr.startsWith("data:image/png;base64,"));
     assert.match(r.data.verify_url, /\/verify\/\d+\/[A-Za-z0-9_-]+$/);
     assert.equal((await anon.get(`/api/result/options`)).data.options.length, 1);
+    const outsider = client(srv.base);
+    const directPdf = await outsider.request("GET", `/api/result/marksheet.pdf?${q}`, { raw: true });
+    assert.equal(directPdf.status, 403);
+    assert.equal((await outsider.get(`/api/result/marksheet-data?${q}`)).status, 403);
 
     // verify page: real link works, tampered link does not, names are escaped
     const path = new URL(r.data.verify_url).pathname;
