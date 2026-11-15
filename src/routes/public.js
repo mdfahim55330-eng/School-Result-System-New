@@ -1,4 +1,4 @@
-"use strict";
+"use strict";\n\nconst crypto = require("crypto");
 
 const express = require("express");
 const db = require("../db");
@@ -53,7 +53,29 @@ async function findResult(query) {
     return found.student;
 }
 
-router.get("/api/result/search", publicLimiter, async (req, res) => {
+router.get("/api/result/captcha", publicLimiter, (req, res) => {
+    const a = crypto.randomInt(2, 10);
+    const b = crypto.randomInt(1, 10);
+    req.session.resultCaptcha = { answer: String(a + b), expires: Date.now() + 5 * 60 * 1000 };
+    const noise = Array.from({ length: 7 }, (_, i) =>
+        '<line x1="' + crypto.randomInt(0, 180) + '" y1="' + crypto.randomInt(5, 42) +
+        '" x2="' + crypto.randomInt(0, 180) + '" y2="' + crypto.randomInt(5, 42) +
+        '" stroke="#94a3b8" stroke-width="1"/>').join("");
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="180" height="48" viewBox="0 0 180 48">' +
+        '<rect width="180" height="48" rx="7" fill="#f1f5f9"/>' + noise +
+        '<text x="90" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-size="23" font-weight="700" fill="#1e3a8a">' +
+        a + ' + ' + b + ' = ?</text></svg>';
+    res.setHeader("Cache-Control", "no-store");
+    res.type("image/svg+xml").send(svg);
+});
+
+router.post("/api/result/search", publicLimiter, async (req, res) => {
+    const challenge = req.session.resultCaptcha;
+    delete req.session.resultCaptcha;
+    const answer = String(req.body.captcha || "").trim();
+    if (!challenge || challenge.expires < Date.now() || !/^\\d{1,2}$/.test(answer) || answer !== challenge.answer) {
+        throw httpError(400, "Invalid or expired CAPTCHA. Please try again.");
+    }
     const student = await findResult(req.query);
     const data = await buildResultData(student);
 
