@@ -38,11 +38,10 @@ async function captchaSearch(who, params) {
 }
 
 // ---------------------------------------------------------------------------
-test("positions follow GPA first, total marks as tiebreaker, and equal total marks share position", () => {
+test("positions prioritize total marks, use GPA as secondary order, and tie equal total marks", () => {
     const students = [
-        // GPA is primary: this student stays ahead despite lower total marks.
+        // Higher total marks ranks first even though GPA is lower.
         { id: 1, roll: "1", result_status: "Pass", total_marks: 250, final_gpa: 5.00 },
-        // Same GPA: higher total marks comes first.
         { id: 2, roll: "2", result_status: "Pass", total_marks: 300, final_gpa: 4.50 },
         // Same total marks as id 1: same position despite a different GPA.
         { id: 3, roll: "3", result_status: "Pass", total_marks: 250, final_gpa: 4.00 },
@@ -57,11 +56,11 @@ test("positions follow GPA first, total marks as tiebreaker, and equal total mar
     assignPositions(students);
 
     const byId = new Map(students.map((student) => [student.id, student.position]));
-    assert.equal(byId.get(1), 1);
-    assert.equal(byId.get(2), 2);
-    assert.equal(byId.get(3), 1);
-    assert.equal(byId.get(4), 2);
-    assert.equal(byId.get(5), 3);
+    assert.equal(byId.get(1), 3);
+    assert.equal(byId.get(2), 1);
+    assert.equal(byId.get(3), 3);
+    assert.equal(byId.get(4), 1);
+    assert.equal(byId.get(5), 2);
     assert.equal(byId.get(6), null);
 });
 test("login, roles and forced password change", async () => {
