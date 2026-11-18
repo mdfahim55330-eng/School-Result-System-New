@@ -12,49 +12,50 @@ function usesFourthSubjectRule(className) {
 }
 
 /**
- * Give every student a position.
- *  mode "gpa"   : students who PASSED are ordered by GPA, then total marks.
- *  mode "marks" : PASSED students are ordered by total marks.
- * Students with the same total marks always share the same position, even if GPA differs.
- * Positions use dense ranking: 1, 1, 2, 3, 3, 4 ...
- * Each student needs: final_gpa, result_status, merit_marks.
+ * Assign positions using the school's fixed ranking rules:
+ * 1. Only students whose final result is Pass are ranked.
+ * 2. Higher GPA comes first; when GPA is equal, higher total marks comes first.
+ * 3. Students with equal total marks share the same position, even when their GPAs differ.
+ * 4. Failed students receive null (displayed as "-").
+ *
+ * Positions are dense and assigned by the first appearance of each total-mark
+ * group in GPA-descending order.
  */
-function assignPositions(students, mode = config.meritMode) {
+function assignPositions(students) {
     const ranked = students
-        .filter((s) => s.result_status === "Pass")
+        .filter((student) => student.result_status === "Pass")
         .slice()
         .sort((a, b) => {
-            if (mode === "gpa") {
-                const g = round2(b.final_gpa) - round2(a.final_gpa);
-                if (g !== 0) return g;
-            }
-            const m = round2(b.total_marks) - round2(a.total_marks);
-            if (m !== 0) return m;
+            const gpaDifference = round2(b.final_gpa) - round2(a.final_gpa);
+            if (gpaDifference !== 0) return gpaDifference;
+
+            const marksDifference = round2(b.total_marks) - round2(a.total_marks);
+            if (marksDifference !== 0) return marksDifference;
+
             return compareRoll(a.roll, b.roll);
         });
 
-    // A total-marks group shares one position even when GPA-first sorting
-    // places another total-marks group between two students in that group.
-    // Position numbers follow the first appearance in GPA-sorted order.
-    const positions = new Map();
-    const positionByTotal = new Map();
+    // Equal total marks share a position even when GPA ordering separates them.
+    const positionByTotalMarks = new Map();
     let nextPosition = 0;
 
-    ranked.forEach((student) => {
-        const totalKey = `total|${round2(student.total_marks)}`;
-        if (!positionByTotal.has(totalKey)) {
+    for (const student of ranked) {
+        const totalMarksKey = String(round2(student.total_marks));
+        if (!positionByTotalMarks.has(totalMarksKey)) {
             nextPosition += 1;
-            positionByTotal.set(totalKey, nextPosition);
+            positionByTotalMarks.set(totalMarksKey, nextPosition);
         }
-        positions.set(student.id, positionByTotal.get(totalKey));
+        student.position = positionByTotalMarks.get(totalMarksKey);
+    }
+
+    students.forEach((student) => {
+        if (student.result_status !== "Pass" || student.position === undefined) {
+            student.position = null;
+        }
     });
 
-    students.forEach((s) => {
-        s.position = positions.has(s.id) ? positions.get(s.id) : null;
-    });
     return students;
 }
-
 /**
  * Everything about one class + exam + year: subjects, every student's marks, totals, positions.
  * filters: { class_name, exam_name, exam_year, group_name (optional, ranks inside that group only) }
@@ -160,7 +161,7 @@ async function getExamReport(filters) {
             exam_name: examName,
             exam_year: examYear,
             group_name: filters.group_name || "",
-            merit_mode: config.meritMode,
+            merit_mode: "gpa_then_total_marks",
             total_students: students.length
         },
         subjects,
