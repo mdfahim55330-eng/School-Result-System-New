@@ -38,45 +38,32 @@ async function captchaSearch(who, params) {
 }
 
 // ---------------------------------------------------------------------------
-test("position ranking uses dense positions for equal total marks", () => {
+test("positions follow GPA first, total marks as tiebreaker, and equal total marks share position", () => {
     const students = [
-        { id: 1, result_status: "Pass", merit_marks: 100, final_gpa: 5 },
-        { id: 2, result_status: "Pass", merit_marks: 100, final_gpa: 5 },
-        { id: 3, result_status: "Pass", merit_marks: 90, final_gpa: 4.8 },
-        { id: 4, result_status: "Pass", merit_marks: 80, final_gpa: 4.5 },
-        { id: 5, result_status: "Pass", merit_marks: 80, final_gpa: 4.5 },
-        { id: 6, result_status: "Pass", merit_marks: 70, final_gpa: 4.0 },
-        { id: 7, result_status: "Fail", merit_marks: 110, final_gpa: 0 }
+        // GPA is primary: this student stays ahead despite lower total marks.
+        { id: 1, roll: "1", result_status: "Pass", total_marks: 250, final_gpa: 5.00 },
+        // Same GPA: higher total marks comes first.
+        { id: 2, roll: "2", result_status: "Pass", total_marks: 300, final_gpa: 4.50 },
+        // Same total marks as id 1: same position despite a different GPA.
+        { id: 3, roll: "3", result_status: "Pass", total_marks: 250, final_gpa: 4.00 },
+        // Same total marks as id 2: same position despite a different GPA.
+        { id: 4, roll: "4", result_status: "Pass", total_marks: 300, final_gpa: 3.50 },
+        // Same GPA as id 2, but lower total marks: comes after id 2.
+        { id: 5, roll: "5", result_status: "Pass", total_marks: 280, final_gpa: 4.50 },
+        // A failed student never receives a position, even with the highest marks.
+        { id: 6, roll: "6", result_status: "Fail", total_marks: 500, final_gpa: 0 }
     ];
 
-    assignPositions(students, "marks");
+    assignPositions(students);
 
-    assert.deepEqual(
-        students.filter((s) => s.position !== null).map((s) => s.position),
-        [1, 1, 2, 3, 3, 4]
-    );
-    assert.equal(students[6].position, null);
-});
-
-test("GPA-first positions share a position for equal total marks even when non-adjacent", () => {
-    const students = [
-        { id: 1, roll: "1", result_status: "Pass", total_marks: 80, final_gpa: 5.00 },
-        { id: 2, roll: "2", result_status: "Pass", total_marks: 90, final_gpa: 4.50 },
-        { id: 3, roll: "3", result_status: "Pass", total_marks: 80, final_gpa: 4.00 },
-        { id: 4, roll: "4", result_status: "Pass", total_marks: 90, final_gpa: 3.50 },
-        { id: 5, roll: "5", result_status: "Fail", total_marks: 120, final_gpa: 0 }
-    ];
-
-    assignPositions(students, "gpa");
-
-    const byId = new Map(students.map((s) => [s.id, s.position]));
+    const byId = new Map(students.map((student) => [student.id, student.position]));
     assert.equal(byId.get(1), 1);
     assert.equal(byId.get(2), 2);
     assert.equal(byId.get(3), 1);
     assert.equal(byId.get(4), 2);
-    assert.equal(byId.get(5), null);
+    assert.equal(byId.get(5), 3);
+    assert.equal(byId.get(6), null);
 });
-
 test("login, roles and forced password change", async () => {
     assert.equal((await anon.get("/api/admin/subjects")).status, 401);
     assert.equal((await anon.post("/api/admin/login", { username: "admin", password: "wrong-password" })).status, 401);
@@ -298,7 +285,7 @@ test("merit positions, statistics, tabulation, exports, backup", async () => {
     // Students now: rahim(4.67) sumi(?) rahim-bn(5) karim(?) failer(fail)
     const merit = (await admin.get("/api/admin/reports/merit?class_name=Ten&exam_name=Annual&exam_year=2026")).data;
     const byName = Object.fromEntries(merit.students.map((s) => [s.name, s]));
-    // both have GPA 4.67; Rahim Uddin has more merit marks (4th subject counts above 40) so he is first
+    // Both have GPA 4.67; Rahim Uddin has higher total marks, so he is first.
     assert.equal(byName["Rahim Uddin"].final_gpa, 4.67);
     assert.equal(byName["রহিম আহমেদ"].final_gpa, 4.67);
     assert.equal(byName["Rahim Uddin"].position, 1);
