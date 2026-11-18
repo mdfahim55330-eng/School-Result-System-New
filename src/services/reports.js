@@ -14,28 +14,28 @@ function usesFourthSubjectRule(className) {
 /**
  * Assign positions using the school's fixed ranking rules:
  * 1. Only students whose final result is Pass are ranked.
- * 2. Higher GPA comes first; when GPA is equal, higher total marks comes first.
- * 3. Students with equal total marks share the same position, even when their GPAs differ.
- * 4. Failed students receive null (displayed as "-").
+ * 2. Higher total marks come first; GPA is the secondary ordering criterion.
+ * 3. If GPA is equal, higher total marks comes first.
+ * 4. Students with equal total marks share the same position, even when their GPAs differ.
+ * 5. Failed students receive null (displayed as "-").
  *
- * Positions are dense and assigned by the first appearance of each total-mark
- * group in GPA-descending order.
+ * Positions are dense and assigned by descending total-mark groups.
  */
 function assignPositions(students) {
     const ranked = students
         .filter((student) => student.result_status === "Pass")
         .slice()
         .sort((a, b) => {
-            const gpaDifference = round2(b.final_gpa) - round2(a.final_gpa);
-            if (gpaDifference !== 0) return gpaDifference;
-
             const marksDifference = round2(b.total_marks) - round2(a.total_marks);
             if (marksDifference !== 0) return marksDifference;
+
+            const gpaDifference = round2(b.final_gpa) - round2(a.final_gpa);
+            if (gpaDifference !== 0) return gpaDifference;
 
             return compareRoll(a.roll, b.roll);
         });
 
-    // Equal total marks share a position even when GPA ordering separates them.
+    // Equal total marks always share a position, regardless of GPA.
     const positionByTotalMarks = new Map();
     let nextPosition = 0;
 
@@ -161,7 +161,7 @@ async function getExamReport(filters) {
             exam_name: examName,
             exam_year: examYear,
             group_name: filters.group_name || "",
-            merit_mode: "gpa_then_total_marks",
+            merit_mode: "total_marks_then_gpa",
             total_students: students.length
         },
         subjects,
