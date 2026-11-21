@@ -14,7 +14,10 @@
     "find-duplicates": "node scripts/find-duplicates.js",
     "restore": "node scripts/restore.js",
     "build:css": "tailwindcss -i src/styles/input.css -o public/css/app.css --minify",
-    "watch:css": "tailwindcss -i src/styles/input.css -o public/css/app.css --watch"
+    "watch:css": "tailwindcss -i src/styles/input.css -o public/css/app.css --watch",
+    "cap:sync": "cap sync android",
+    "cap:open:android": "cap open android",
+    "cap:run:android": "cap run android"
   },
   "keywords": [
     "school",
@@ -38,13 +41,16 @@
     "pdfkit": "^0.20.2",
     "pg": "^8.23.0",
     "qrcode": "^1.5.4",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "@capacitor/core": "^8.6.2"
   },
   "devDependencies": {
     "@tailwindcss/forms": "^0.5.11",
     "jsdom": "^30.1.0",
     "nodemon": "^3.1.14",
-    "tailwindcss": "^3.4.19"
+    "tailwindcss": "^3.4.19",
+    "@capacitor/cli": "^8.6.2",
+    "@capacitor/android": "^8.6.2"
   },
   "overrides": {
     "uuid": "^11.1.1"
