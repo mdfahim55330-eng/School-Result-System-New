@@ -25,9 +25,9 @@ function idParam(req) {
 const isMain = (subject) => String(subject.subject_type || "main").toLowerCase() !== "fourth";
 
 /** Every normal (non-4th) subject of the class must have marks. */
-function assertAllMainSubjects(classSubjects, processed) {
+function assertAllMainSubjects(classSubjects, processed, notHeldIds = new Set()) {
     const entered = new Set(processed.map((p) => p.subject_id));
-    const missing = classSubjects.filter((s) => isMain(s) && !entered.has(Number(s.id)));
+    const missing = classSubjects.filter((s) => isMain(s) && !notHeldIds.has(Number(s.id)) && !entered.has(Number(s.id)));
     if (missing.length > 0) {
         throw httpError(400, `Marks are missing for: ${missing.map((s) => s.subject_name).join(", ")}.`);
     }
@@ -302,7 +302,9 @@ router.post("/results/individual", async (req, res) => {
         }
         throw error;
     }
-    assertAllMainSubjects(classSubjects, graded.processed);
+    const notHeldRows = await db.all(`SELECT nh.subject_id FROM exam_not_held_subjects nh INNER JOIN exams e ON e.id = nh.exam_id WHERE e.class_name = ? AND e.exam_name = ? AND e.exam_year = ?`, [exam.class_name, exam.exam_name, exam.exam_year]);
+    const notHeldIds = new Set(notHeldRows.map((row) => Number(row.subject_id)));
+    assertAllMainSubjects(classSubjects, graded.processed, notHeldIds);
 
     const student = { ...data.student, roll: data.student.roll.trim() };
 
@@ -365,7 +367,9 @@ router.put("/results/:id", async (req, res) => {
     const subjectsById = new Map(classSubjects.map((s) => [Number(s.id), s]));
 
     const graded = gradeSubjects(subjectsById, data.results);
-    assertAllMainSubjects(classSubjects, graded.processed);
+    const examRows = await db.all(`SELECT nh.subject_id FROM exam_not_held_subjects nh INNER JOIN exams e ON e.id = nh.exam_id WHERE e.class_name = ? AND e.exam_name = ? AND e.exam_year = ?`, [current.class_name, current.exam_name, current.exam_year]);
+    const notHeldIds = new Set(examRows.map((row) => Number(row.subject_id)));
+    assertAllMainSubjects(classSubjects, graded.processed, notHeldIds);
 
     const oldRows = await db.all(
         `SELECT r.subject_id, r.marks, s.subject_name FROM results r
