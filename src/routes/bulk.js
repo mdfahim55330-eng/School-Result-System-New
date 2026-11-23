@@ -67,6 +67,7 @@ router.post("/bulk-preview", upload.single("excelFile"), async (req, res) => {
         });
         response.exam = { id: exam.id, exam_name: exam.exam_name, exam_year: exam.exam_year, class_name: exam.class_name };
         response.counts = analysis.counts;
+        response.not_held_subjects = subjects.filter((s) => (analysis.notHeldSubjectIds || []).includes(Number(s.id))).map((s) => s.subject_name);
         response.analysis = analysis.rows.map((r) => ({
             row: r.row, name: r.name, roll: r.roll, registration: r.registration,
             valid: r.valid, state: r.state, errors: r.errors, gpa: r.gpa, grade: r.grade, result: r.result
@@ -102,11 +103,14 @@ router.post("/bulk-import", upload.single("excelFile"), async (req, res) => {
     });
 
     const subjectsById = new Map(subjects.map((s) => [Number(s.id), s]));
+    const notHeldSubjectIds = analysis.notHeldSubjectIds || [];
     const good = analysis.rows.filter((r) => r.valid);
     let created = 0;
     let updated = 0;
 
     await db.tx(async (client) => {
+        await client.query(`DELETE FROM exam_not_held_subjects WHERE exam_id = $1`, [exam.id]);
+        for (const subjectId of notHeldSubjectIds) await client.query(`INSERT INTO exam_not_held_subjects (exam_id, subject_id) VALUES ($1, $2) ON CONFLICT (exam_id, subject_id) DO NOTHING`, [exam.id, subjectId]);
         for (const item of good) {
             const { processed, final } = gradeSubjects(subjectsById, item.marks);
             const student = { name: item.name, roll: item.roll, registration: item.registration, group_name: item.group_name };
@@ -153,7 +157,8 @@ router.post("/bulk-import", upload.single("excelFile"), async (req, res) => {
         updated,
         failed: errors.length,
         errors,
-        published: publish
+        published: publish,
+        not_held_subjects: notHeldSubjectIds.map((id) => subjectsById.get(Number(id))?.subject_name).filter(Boolean)
     });
 });
 
