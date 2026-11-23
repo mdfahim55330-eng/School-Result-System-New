@@ -172,7 +172,7 @@ function drawMarksheet(doc, data, extra = {}) {
             s.full_marks,
             s.marks,
             s.grade,
-            fmt(s.grade_point, 2)
+            s.grade_point === null || s.grade_point === undefined ? "-" : fmt(s.grade_point, 2)
         ]);
     });
     y += 16;
