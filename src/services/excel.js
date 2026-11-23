@@ -150,6 +150,16 @@ function analyzeRows({ columns, rows, subjects, existing, duplicateMode, lockPub
 
     const subjectCols = subjects.map((subject) => ({ subject, col: subjectColumn(columns, subject) }));
     const isFourth = (subject) => String(subject.subject_type || "").toLowerCase() === "fourth";
+    const isNotHeldMarker = (value) => typeof value === "string" && value.trim().toUpperCase() === "N/A";
+    const notHeldSubjectIds = new Set();
+    const mixedNotHeldSubjectIds = new Set();
+    for (const { subject, col } of subjectCols) {
+        if (!col) continue;
+        const values = rows.map((row) => row[col]);
+        const markerCount = values.filter(isNotHeldMarker).length;
+        if (values.length > 0 && markerCount === values.length) notHeldSubjectIds.add(Number(subject.id));
+        else if (markerCount > 0) mixedNotHeldSubjectIds.add(Number(subject.id));
+    }
     // A missing column is only an error for normal subjects; a 4th subject may be left out completely.
     const missing = subjectCols.filter((s) => !s.col && !isFourth(s.subject)).map((s) => `${s.subject.subject_name} (${s.subject.subject_code})`);
     if (missing.length > 0) {
@@ -189,6 +199,9 @@ function analyzeRows({ columns, rows, subjects, existing, duplicateMode, lockPub
         for (const { subject, col } of subjectCols) {
             const raw = col ? row[col] : "";
             const subjectName = subject.subject_name;
+            if (mixedNotHeldSubjectIds.has(Number(subject.id))) { item.errors.push(`${subjectName}: enter N/A for every student if the subject exam was not held; do not mix N/A with marks.`); continue; }
+            if (notHeldSubjectIds.has(Number(subject.id))) continue;
+            if (isNotHeldMarker(raw)) { item.errors.push(`${subjectName}: N/A must be entered for every student, or enter marks for every student.`); continue; }
             if (raw === "" || raw === null || raw === undefined) {
                 // A 4th (optional) subject is not taken by every student: blank simply means "not taken".
                 if (String(subject.subject_type || "").toLowerCase() === "fourth") continue;
@@ -250,7 +263,7 @@ function analyzeRows({ columns, rows, subjects, existing, duplicateMode, lockPub
         skipped: analyzed.filter((r) => r.state === "skip").length,
         invalid: analyzed.filter((r) => !r.valid && r.state !== "skip").length
     };
-    return { rows: analyzed, counts };
+    return { rows: analyzed, counts, notHeldSubjectIds: [...notHeldSubjectIds] };
 }
 
 // ---------------------------------------------------------------------------
@@ -289,7 +302,7 @@ async function buildTemplate({ subjects, exam }) {
         exam ? `Exam: ${exam.exam_name} - Class ${exam.class_name} - ${exam.exam_year}` : "This is a generic demo. Download the template again after choosing an exam to get its real subject columns.",
         "1. Type students in the 'Data' sheet, one student per row, starting from row 2. Do not rename or delete the column headings.",
         "2. Name and Roll are required. Registration and Group are optional.",
-        "3. Every subject column needs marks (a number from 0 to the subject's full marks).",
+        "3. Enter marks for examined subjects. If a subject exam was NOT held, enter N/A in that subject column for EVERY student. Do not leave cells blank.",
         "4. The 'Example' sheet is only an example. Only the FIRST sheet ('Data') is imported.",
         "5. Save as .xlsx (Excel Workbook)."
     ];
