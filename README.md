@@ -45,3 +45,8 @@ No database change is needed by hand: the server upgrades the old tables on star
 | `npm run restore -- file.json` | restore a backup into an EMPTY database |
 | `npm run build:css` | rebuild `public/css/app.css` (only after changing Tailwind classes in HTML/JS) |
 | `TEST_DATABASE_URL=postgres://... npm test` | run all tests (**erases** that database, use an empty test database) |
+
+
+### Excel import: subject exam not held
+
+When importing results, enter `N/A` in the subject column for **every student** if that subject's exam was not held. The importer treats it as not held for the selected exam and excludes it from total marks, GPA, grade and result calculations. The marksheet displays `N/A` for that subject. Do not leave cells blank or mix `N/A` with numeric marks in the same subject column. A blank cell or mixed column is an import error.
