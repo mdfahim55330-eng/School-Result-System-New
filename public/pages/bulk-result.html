@@ -16,7 +16,7 @@
                 <label class="label" for="exam">Exam</label>
                 <select id="exam" class="input"><option value="">Select exam</option></select>
                 <button id="template" type="button" class="btn-secondary btn-sm mt-3" disabled>Download Excel template</button>
-                <p class="mt-2 text-xs text-slate-400">The template has one column for every subject of the class.</p>
+                <p class="mt-2 text-xs text-slate-500">The template has one column for every subject of the class. If a subject exam was not held, enter <strong>N/A</strong> in that subject column for EVERY student. Do not leave it blank. The subject will be excluded from totals and GPA.</p>
             </div>
             <div class="lg:col-span-2">
                 <label class="label" for="file">Excel file (.xlsx)</label>
@@ -101,7 +101,7 @@
         $check.textContent = "Check the file"; ready();
         if (!r.ok) return App.toast(r.data.message || "Could not read the file.", "error");
         const c = r.data.counts;
-        App.$("#chips").innerHTML = chip(c.total + " rows", "badge-gray") + chip(c.new + " new", "badge-green") +
+        App.$("#chips").innerHTML = chip(c.total + " rows", "badge-gray") + (r.data.not_held_subjects && r.data.not_held_subjects.length ? chip("Not held: " + r.data.not_held_subjects.join(", "), "badge-blue") : "") + chip(c.new + " new", "badge-green") +
             (c.update ? chip(c.update + " will be replaced", "badge-blue") : "") + (c.skipped ? chip(c.skipped + " already exist (skipped)", "badge-amber") : "") +
             (c.invalid ? chip(c.invalid + " with problems", "badge-red") : "");
         App.$("#preview-rows").innerHTML = r.data.analysis.map(function (x) {
