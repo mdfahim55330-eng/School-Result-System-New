@@ -220,7 +220,7 @@
                     '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.full_marks) + "</td>" +
                     '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.marks) + "</td>" +
                     '<td class="border-b border-r border-slate-300 px-3 py-1.5 text-center">' + App.esc(x.grade) + "</td>" +
-                    '<td class="border-b border-slate-300 px-3 py-1.5 text-center">' + Number(x.grade_point).toFixed(2) + "</td></tr>";
+                    '<td class="border-b border-slate-300 px-3 py-1.5 text-center">' + (x.grade_point === null || x.grade_point === undefined ? "-" : Number(x.grade_point).toFixed(2)) + "</td></tr>";
             }).join("");
             const failed = String(m.result).toLowerCase() === "fail";
             App.$("#summary").innerHTML = box("Total Marks", m.total_marks + " / " + m.total_full_marks) + box("GPA", Number(m.gpa).toFixed(2), failed) +
