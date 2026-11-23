@@ -71,6 +71,11 @@ async function getExamReport(filters) {
         [className]
     );
 
+    const examRow = await db.one(`SELECT id FROM exams WHERE class_name = ? AND exam_name = ? AND exam_year = ? LIMIT 1`, [className, examName, examYear]);
+    const notHeldRows = examRow ? await db.all(`SELECT subject_id FROM exam_not_held_subjects WHERE exam_id = ?`, [examRow.id]) : [];
+    const notHeldIds = new Set(notHeldRows.map((row) => Number(row.subject_id)));
+    subjects.forEach((subject) => { subject.not_held = notHeldIds.has(Number(subject.id)); });
+
     const studentRows = await db.all(
         `SELECT id, name, roll, registration, group_name, status, final_gpa, final_grade, result_status
          FROM students
@@ -95,7 +100,7 @@ async function getExamReport(filters) {
     }
 
     let students = studentRows.map((s) => {
-        const list = byStudent.get(s.id) || [];
+        const list = (byStudent.get(s.id) || []).filter((r) => !notHeldIds.has(Number(r.subject_id)));
         const marks = {};
         const grades = {};
         let total = 0;
@@ -130,8 +135,8 @@ async function getExamReport(filters) {
             final_gpa: round2(final.gpa),
             final_grade: final.grade,
             result_status: final.status,
-            marks,
-            grades,
+            marks: Object.assign(marks, Object.fromEntries([...notHeldIds].map((id) => [id, "N/A"]))),
+            grades: Object.assign(grades, Object.fromEntries([...notHeldIds].map((id) => [id, "N/A"]))),
             subjects_entered: list.length,
             total_marks: round2(total),
             total_full_marks: totalFull,
@@ -191,7 +196,7 @@ function buildStatistics(report) {
     const toppers = topPosition ? students.filter((s) => s.position === 1) : [];
 
     const subjectStats = subjects.map((subject) => {
-        const entries = students
+        const entries = subject.not_held ? [] : students
             .filter((s) => s.marks[subject.id] !== undefined)
             .map((s) => ({ marks: s.marks[subject.id], grade: s.grades[subject.id] }));
         const appeared = entries.length;
@@ -203,6 +208,7 @@ function buildStatistics(report) {
             subject_code: subject.subject_code,
             full_marks: subject.full_marks,
             subject_type: subject.subject_type,
+            not_held: Boolean(subject.not_held),
             appeared,
             passed: appeared - failedHere,
             failed: failedHere,
