@@ -41,14 +41,17 @@ async function buildResultData(student) {
     const notHeldRows = examRow ? await db.all(`SELECT subject_id FROM exam_not_held_subjects WHERE exam_id = ?`, [examRow.id]) : [];
     const notHeldIds = new Set(notHeldRows.map((row) => Number(row.subject_id)));
     const subjects = await db.all(
-        `SELECT results.id, results.subject_id, results.marks, results.grade, results.grade_point, results.is_fourth_subject,
-                subjects.subject_name, subjects.subject_code, subjects.full_marks, subjects.subject_type
-         FROM results INNER JOIN subjects ON results.subject_id = subjects.id
-         WHERE results.student_id = ? ORDER BY subjects.id ASC`, [student.id]
+        `SELECT results.id, subjects.id AS subject_id, results.marks, results.grade, results.grade_point,
+                results.is_fourth_subject, subjects.subject_name, subjects.subject_code,
+                subjects.full_marks, subjects.subject_type
+         FROM subjects
+         LEFT JOIN results ON results.subject_id = subjects.id AND results.student_id = ?
+         WHERE subjects.class_name = ?
+         ORDER BY subjects.id ASC`, [student.id, student.class_name]
     );
     let totalMarks = 0, totalFullMarks = 0;
-    subjects.forEach((s) => { if (!notHeldIds.has(Number(s.subject_id))) { totalMarks += Number(s.marks || 0); totalFullMarks += Number(s.full_marks || 0); } });
-    const final = calculateFinalGPA(subjects.filter((s) => !notHeldIds.has(Number(s.subject_id))));
+    subjects.forEach((s) => { if (!notHeldIds.has(Number(s.subject_id)) && s.marks !== null && s.marks !== undefined) { totalMarks += Number(s.marks || 0); totalFullMarks += Number(s.full_marks || 0); } });
+    const final = calculateFinalGPA(subjects.filter((s) => !notHeldIds.has(Number(s.subject_id)) && s.marks !== null && s.marks !== undefined));
     const displayedSubjects = subjects.map((s) => notHeldIds.has(Number(s.subject_id)) ? { ...s, marks: "N/A", grade: "N/A", grade_point: null } : s);
 
     // position inside the whole class (cached, so many people can search at once)
